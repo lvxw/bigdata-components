@@ -1,0 +1,15 @@
+dn: cn=sula,ou=Dev,dc=openldap,dc=com
+objectClass: inetOrgPerson
+objectClass: top
+cn: sula
+sn: su
+givenName: la
+userPassword: sula
+
+dn: cn=zhaoqi,ou=Dev,dc=openldap,dc=com
+objectClass: inetOrgPerson
+objectClass: top
+cn: zhaoqi
+sn: zhao
+givenName: qi
+userPassword: zhaoqi

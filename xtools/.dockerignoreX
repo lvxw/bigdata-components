@@ -1,0 +1,9 @@
+./dependency
+!./dependency/common
+!./dependency/paimon-1.2.0
+!./dependency/fluss-0.8.0-incubating
+!./dependency/amoro-0.8.1-incubating
+!./dependency/spark-3.5.4
+!./dependency/gravitino-1.1.0
+!./dependency/celeborn-0.6.2
+!./dependency/hadoop-3.1.4

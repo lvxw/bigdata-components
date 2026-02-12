@@ -1,0 +1,37 @@
+#!/bin/bash
+
+SCRIPT_PATH=$(cd `dirname $0` && pwd)
+
+cd ${SCRIPT_PATH}
+
+if [[ $# -ne 2 ]]
+then
+  echo "请传入两个参数， 参数一： 组件名[hadoop|flink|hive...]， 第二个参数： 组件版本号[3.1.4|1.14.6]"
+  exit -1
+else
+  COMPONENT_TYPE=${1}
+  COMPONENT_VERSION=${2}
+fi
+
+echo './dependency' >  ../.dockerignore
+echo '!./dependency/common' >>  ../.dockerignore
+echo '!./dependency/paimon-1.2.0' >>  ../.dockerignore
+echo '!./dependency/fluss-0.8.0-incubating' >>  ../.dockerignore
+echo '!./dependency/amoro-0.8.1-incubating' >>  ../.dockerignore
+echo '!./dependency/spark-3.5.4' >>  ../.dockerignore
+echo '!./dependency/gravitino-1.1.0' >>  ../.dockerignore
+echo '!./dependency/celeborn-0.6.2' >>  ../.dockerignore
+echo "!./dependency/${COMPONENT_TYPE}-${COMPONENT_VERSION}" >>  ../.dockerignore
+
+#docker rm -f ${COMPONENT_TYPE}  &&  docker image prune -f
+
+#docker pull 10.10.52.13:5000/lakehouse/${COMPONENT_TYPE}:${COMPONENT_VERSION}
+
+DOCKER_CMD="docker build \
+    -t 10.10.52.13:5000/lakehouse/${COMPONENT_TYPE}:${COMPONENT_VERSION} \
+    -f ./${COMPONENT_TYPE}-${COMPONENT_VERSION}.Dockerfile \
+    ../"
+
+echo ${DOCKER_CMD}
+
+eval ${DOCKER_CMD}

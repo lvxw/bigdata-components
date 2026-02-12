@@ -1,0 +1,5 @@
+{
+  "storage-driver": "vfs",
+  "registry-mirrors": ["https://aoewjvel.mirror.aliyuncs.com"],
+  "insecure-registries": ["http://10.10.52.13:5000", "http://harbor:7780"]
+}

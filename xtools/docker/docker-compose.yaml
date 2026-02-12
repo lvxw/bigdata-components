@@ -1,0 +1,741 @@
+
+
+networks:
+  datalake-network:
+    name: datalake-network
+    driver: bridge
+    ipam:
+      config:
+        - gateway: 172.23.0.1
+          subnet: 172.23.0.0/16
+
+services:
+  harbor:
+    image: 10.10.52.13:5000/lakehouse/harbor:2.10.3
+    privileged: true
+    hostname: harbor
+    container_name: harbor
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "7780:7780"
+    volumes:
+      - /data/docker/harbor/data:/data
+      - /data/docker/harbor/docker:/var/lib/docker/
+
+  my-kasm:
+    image: 10.10.52.13:5000/lakehouse/kasm:1.0.0
+    privileged: true
+    hostname: my-kasm
+    container_name: my-kasm
+    restart: always
+    environment:
+      VNC_PW: password
+    networks:
+      datalake-network:
+    ports:
+      - "6902:6901"
+      - "8000:8000"
+      - "8888:8888"
+      - "5005:5005"
+      - "5006:5006"
+      - "22222:22"
+    volumes:
+      - /mnt/e:/mnt/e
+      - /mnt/c:/mnt/c
+
+  desktop:
+    image: 10.10.52.13:5000/lakehouse/desktop:1.15.0
+    extra_hosts:
+      - "my-ubuntu:172.30.76.81"
+    volumes:
+      - /:/mnt/host
+      - /mnt/e:/mnt/e
+      - /mnt/c:/mnt/c
+    privileged: true
+    hostname: desktop
+    container_name: desktop
+    restart: always
+    environment:
+      KASM_USER: kasm-user
+      VNC_PW: password
+    networks:
+      datalake-network:
+    ports:
+      - "6901:6901"
+
+  firefox:
+    image: 10.10.52.13:5000/lakehouse/firefox:1.15.0
+    privileged: true
+    hostname: firefox
+    container_name: firefox
+    restart: always
+    environment:
+      VNC_PW: password
+    networks:
+      datalake-network:
+    ports:
+      - "6903:6901"
+
+  zookeeper:
+    image: 10.10.52.13:5000/lakehouse/zookeeper:3.6.3
+    user: root
+    privileged: true
+    hostname: zookeeper
+    container_name: zookeeper
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "2181:2181"
+
+  mysql:
+    image: 10.10.52.13:5000/lakehouse/mysql:5.7
+    user: root
+    privileged: false
+    hostname: mysql
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "3306:3306"
+
+  hadoop:
+    image: 10.10.52.13:5000/lakehouse/hadoop:3.1.4
+    user: root
+    privileged: true
+    hostname: hadoop
+    container_name: hadoop
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9870:9870"
+      - "8020:8020"
+      - "9864:9864"
+      - "9866:9866"
+      - "9867:9867"
+      - "8030:8030"
+      - "8031:8031"
+      - "8032:8032"
+      - "8033:8033"
+      - "8088:8088"
+      - "8040:8040"
+      - "8042:8042"
+      - "8081:8081"
+      - "19888:19888"
+
+  hbase:
+    image: 10.10.52.13:5000/lakehouse/hbase:2.4.9
+    user: root
+    privileged: true
+    hostname: hbase
+    container_name: hbase
+    depends_on:
+      - hadoop
+      - zookeeper
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "16000:16000"
+      - "16010:16010"
+      - "16020:16020"
+      - "16030:16030"
+
+  hive:
+    image: 10.10.52.13:5000/lakehouse/hive:3.1.3
+    user: root
+    privileged: true
+    hostname: hive
+    container_name: hive
+    depends_on:
+      - mysql
+      - hadoop
+      - zookeeper
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+      - "9083:9083"
+
+  trino:
+    image: 10.10.52.13:5000/lakehouse/trino:373
+    user: root
+    privileged: true
+    hostname: trino
+    container_name: trino
+    depends_on:
+      - hive
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8087:8087"
+
+  doris:
+    image: 10.10.52.13:5000/lakehouse/doris:2.1.11
+    user: root
+    privileged: true
+    hostname: doris
+    container_name: doris
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "48030:48030"
+      - "49020:49020"
+      - "49030:49030"
+      - "49040:49040"
+      - "49010:49010"
+      - "49060:49060"
+      - "48040:48040"
+      - "49050:49050"
+      - "48060:48060"
+
+  flink:
+    image: 10.10.52.13:5000/lakehouse/flink:1.20.3
+    user: root
+    privileged: true
+    hostname: flink
+    container_name: flink
+    depends_on:
+      - hive
+      - zookeeper
+#      - trino
+      - kafka
+#      - grafana
+#      - clickhouse
+      - doris
+      - fluss
+      - gravitino
+      - minio
+      - amoro
+#      - celeborn
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8082:8082"
+      - "10003:10003"
+      - "10004:10004"
+
+
+  spark:
+    image: 10.10.52.13:5000/lakehouse/spark:3.5.4
+    user: root
+    privileged: true
+    hostname: spark
+    container_name: spark
+    depends_on:
+      - hadoop
+      - gravitino
+      - celeborn
+    restart: always
+    networks:
+      datalake-network:
+
+  kafka:
+    image: 10.10.52.13:5000/lakehouse/kafka:2.8.2
+    user: root
+    privileged: true
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9092:9092"
+
+  clickhouse:
+    image:  10.10.52.13:5000/lakehouse/clickhouse:21.3.20.1
+    user: root
+    privileged: true
+    hostname: clickhouse
+    container_name: clickhouse
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9004:9004"
+      - "9009:9009"
+
+  #  clickhouse1:
+  #    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/clickhouse-cluster:21.3.20.1
+  #    user: root
+  #    privileged: true
+  #    hostname: clickhouse1
+  #    container_name: clickhouse1
+  #    restart: always
+  #    depends_on:
+  #      - zookeeper
+  #    networks:
+  #      datalake-network:
+  #    ports:
+  #      - "8123:8123"
+  #      - "9000:9000"
+  #      - "9004:9004"
+  #      - "9009:9009"
+  #
+  #  clickhouse2:
+  #    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/clickhouse-cluster:21.3.20.1
+  #    user: root
+  #    privileged: true
+  #    hostname: clickhouse2
+  #    container_name: clickhouse2
+  #    restart: always
+  #    depends_on:
+  #      - zookeeper
+  #    networks:
+  #      datalake-network:
+
+  alluxio:
+    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/alluxio:2.7.4
+    user: root
+    privileged: true
+    hostname: alluxio
+    container_name: alluxio
+    restart: always
+    networks:
+      datalake-network:
+    environment:
+      ALLUXIO_JAVA_OPTS: "-Dalluxio.master.security.impersonation.root.users=* -Dalluxio.master.hostname=alluxio -Dalluxio.master.mount.table.root.ufs=hdfs://hadoop:8020/alluxio -Dalluxio.worker.ramdisk.size=1G"
+    depends_on:
+      - flink
+    ports:
+      - "19998:19998"
+      - "19999:19999"
+      - "19200:19200"
+      - "20001:20001"
+      - "20002:20002"
+      - "20003:20003"
+      - "29999:29999"
+      - "30000:30000"
+      - "30001:30001"
+      - "30003:30003"
+
+  bookkeeper:
+    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/bookkeeper:4.15.4
+    user: root
+    privileged: true
+    hostname: bookkeeper
+    container_name: bookkeeper
+    restart: always
+    networks:
+      datalake-network:
+    depends_on:
+      - zookeeper
+    ports:
+      - "3181:3181"
+      - "8080:8080"
+
+  pulsar:
+    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/pulsar:2.11.1
+    user: root
+    privileged: true
+    hostname: pulsar
+    container_name: pulsar
+    restart: always
+    networks:
+      datalake-network:
+    depends_on:
+      - bookkeeper
+      - zookeeper
+      - hadoop
+    ports:
+      - "8082:8082"
+      - "6650:6650"
+
+  pulsar-manager:
+    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/pulsar-manager:0.3.0
+    user: root
+    privileged: true
+    hostname: pulsar-manager
+    container_name: pulsar-manager
+    restart: always
+    networks:
+      datalake-network:
+    depends_on:
+      - pulsar
+    ports:
+      - "7750:7750"
+
+  superset:
+    image: 10.10.52.13:5000/lakehouse/superset:4.1.3
+    user: superset
+    privileged: true
+    hostname: superset
+    container_name: superset
+    restart: always
+    networks:
+      datalake-network:
+    depends_on:
+      - mysql
+    ports:
+      - "8083:8088"
+
+  elasticsearch:
+    image: 10.10.52.13:5000/lakehouse/elasticsearch:7.14.2
+    user: root
+    privileged: true
+    hostname: elasticsearch
+    container_name: elasticsearch
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  janusgraph:
+    image: 10.10.52.13:5000/lakehouse/janusgraph:0.6.4
+    user: root
+    privileged: true
+    hostname: janusgraph
+    container_name: janusgraph
+    restart: always
+    networks:
+      datalake-network:
+    depends_on:
+      - elasticsearch
+      - hbase
+    ports:
+      - "8182:8182"
+
+  kyuubi:
+    image: 10.10.52.13:5000/lakehouse/kyuubi:1.11.0
+    user: root
+    privileged: true
+    hostname: kyuubi
+    container_name: kyuubi
+    depends_on:
+      - hive
+      - flink
+      - spark
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "10009:10009"
+      - "10099:10099"
+
+  minio:
+    image: 10.10.52.13:5000/lakehouse/minio:20250422
+    user: root
+    privileged: true
+    hostname: minio
+    container_name: minio
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+
+  pushgateway:
+    image: 10.10.52.13:5000/lakehouse/pushgateway:1.11.1
+    user: root
+    privileged: true
+    hostname: pushgateway
+    container_name: pushgateway
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9091:9091"
+
+  prometheus:
+    image: 10.10.52.13:5000/lakehouse/prometheus:2.45.1
+    user: root
+    privileged: true
+    hostname: prometheus
+    container_name: prometheus
+    depends_on:
+      - pushgateway
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9093:9090"
+
+  grafana:
+    image: 10.10.52.13:5000/lakehouse/grafana:8.5.27
+    user: root
+    privileged: true
+    hostname: grafana
+    container_name: grafana
+    depends_on:
+      - prometheus
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "3000:3000"
+
+  jupyter:
+    image: 10.10.52.13:5000/lakehouse/jupyter:6.1.0
+    user: root
+    privileged: true
+    hostname: jupyter
+    container_name: jupyter
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8887:8887"
+
+  dinky:
+    image: 10.10.52.13:5000/lakehouse/dinky:1.2.5
+    user: root
+    privileged: true
+    hostname: dinky
+    container_name: dinky
+    depends_on:
+      - mysql
+      - flink
+#      - openldap
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8889:8889"
+
+  streampark:
+    image: 10.10.52.13:5000/lakehouse/streampark:2.1.7
+    user: root
+    privileged: true
+    hostname: streampark
+    container_name: streampark
+    depends_on:
+      - flink
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "60007:60007"
+
+  ollama:
+    image: 10.10.52.13:5000/lakehouse/ollama:0.3.0
+    user: root
+    privileged: true
+    hostname: ollama
+    container_name: ollama
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "11434:11434"
+
+  maxkb:
+    image: 10.10.52.13:5000/lakehouse/maxkb:1.3.1
+    user: root
+    privileged: true
+    hostname: maxkb
+    container_name: maxkb
+    depends_on:
+      - ollama
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "58080:8080"
+
+  hugegraph:
+    image: 10.10.52.13:5000/lakehouse/hugegraph:1.3.0
+    user: root
+    privileged: true
+    hostname: hugegraph
+    container_name: hugegraph
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "48080:8080"
+      - "48182:8182"
+      - "8091:8091"
+      - "48088:8088"
+
+  zeppelin:
+    image: 10.10.52.13:5000/lakehouse/zeppelin:0.11.1
+    user: root
+    privileged: true
+    hostname: zeppelin
+    container_name: zeppelin
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8085:8080"
+
+  nginx:
+    image: 10.10.52.13:5000/lakehouse/nginx:1.22.1
+    privileged: true
+    hostname: nginx
+    container_name: nginx
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "6443:6443"
+      - "32761:32761"
+
+  openldap:
+    image: 10.10.52.13:5000/lakehouse/openldap:2.4.57
+    user: root
+    privileged: true
+    hostname: openldap
+    container_name: openldap
+    environment:
+      LDAP_ORGANISATION: openldap
+      LDAP_DOMAIN: openldap.com
+      LDAP_ADMIN_PASSWORD: admin
+      LDAP_TLS_CRT_FILENAME: ldap.crt
+      LDAP_TLS_KEY_FILENAME: ldap.key
+      LDAP_TLS_CA_CRT_FILENAME: ca.crt
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "389:389"
+      - "636:636"
+
+  openldapadmin:
+    image: 10.10.52.13:5000/lakehouse/openldapadmin:1.2.5
+    user: root
+    privileged: true
+    hostname: openldapadmin
+    container_name: openldapadmin
+    environment:
+      PHPLDAPADMIN_HTTPS: false
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+    restart: always
+    depends_on:
+      - openldap
+    networks:
+      datalake-network:
+    ports:
+      - "8989:80"
+#    Login DN：cn=admin,dc=openldap,dc=com
+#    Password：admin
+
+  seatunnel:
+    image: 10.10.52.13:5000/lakehouse/seatunnel:2.3.12
+    user: root
+    privileged: true
+    hostname: seatunnel
+    container_name: seatunnel
+    depends_on:
+      - hadoop
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8180:8080"
+
+  gravitino:
+    image: 10.10.52.13:5000/lakehouse/gravitino:1.1.0
+    user: root
+    privileged: true
+    hostname: gravitino
+    container_name: gravitino
+    depends_on:
+      - mysql
+      - hadoop
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8090:8090"
+
+  amoro:
+    image: 10.10.52.13:5000/lakehouse/amoro:0.8.1-incubating
+    user: root
+    privileged: true
+    hostname: amoro
+    container_name: amoro
+    depends_on:
+      - hive
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "1260:1260"
+      - "1261:1261"
+      - "1630:1630"
+
+  fluss:
+    image: 10.10.52.13:5000/lakehouse/fluss:0.8.0-incubating
+    user: root
+    privileged: true
+    hostname: fluss
+    container_name: fluss
+    depends_on:
+      - zookeeper
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9123:9123"
+
+  seatunnel-web:
+    image: 10.10.52.13:5000/lakehouse/seatunnel-web:1.0.2
+    user: root
+    privileged: true
+    hostname: seatunnel-web
+    container_name: seatunnel-web
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8801:8801"
+
+  celeborn:
+    image: 10.10.52.13:5000/lakehouse/celeborn:0.6.2
+    user: root
+    privileged: true
+    hostname: celeborn
+    container_name: celeborn
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9096:9096"
+      - "9098:9098"
+
+  dolphinscheduler:
+    image: 10.10.52.13:5000/lakehouse/dolphinscheduler:3.4.0
+    user: root
+    privileged: true
+    hostname: dolphinscheduler
+    container_name: dolphinscheduler
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "12345:12345"
+
+  k8s:
+    image: 10.10.52.13:5000/lakehouse/k8s:1.35.0
+    user: root
+    privileged: true
+    hostname: k8s
+    container_name: k8s
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "6443:6443"

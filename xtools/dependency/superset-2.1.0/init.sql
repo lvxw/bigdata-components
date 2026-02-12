@@ -1,0 +1,1 @@
+INSERT INTO `superset`.`dbs` VALUES ('2024-05-31 06:50:35','2024-05-31 06:50:35',1,'MySQL','mysql+mysqldb://superset:XXXXXXXXXX@mysql:3306/superset',1,1,_binary 'yUJTypolbAt035RsWpuucg==',NULL,'{\"allows_virtual_table_explore\":true}',0,0,1,NULL,0,0,NULL,0,0,_binary '2hf2Edyay3mEomG+yrRsGA==',NULL,0,_binary '','dynamic_form',0,NULL);
