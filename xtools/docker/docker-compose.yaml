@@ -300,7 +300,7 @@ services:
   #      datalake-network:
 
   alluxio:
-    image: registry.cn-hangzhou.aliyuncs.com/lvxw_test/alluxio:2.7.4
+    image: 10.10.52.13:5000/lakehouse/alluxio:2.7.4
     user: root
     privileged: true
     hostname: alluxio
@@ -311,7 +311,7 @@ services:
     environment:
       ALLUXIO_JAVA_OPTS: "-Dalluxio.master.security.impersonation.root.users=* -Dalluxio.master.hostname=alluxio -Dalluxio.master.mount.table.root.ufs=hdfs://hadoop:8020/alluxio -Dalluxio.worker.ramdisk.size=1G"
     depends_on:
-      - flink
+      - hadoop
     ports:
       - "19998:19998"
       - "19999:19999"
