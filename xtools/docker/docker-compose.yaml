@@ -1,5 +1,3 @@
-
-
 networks:
   datalake-network:
     name: datalake-network
@@ -739,3 +737,23 @@ services:
       datalake-network:
     ports:
       - "6443:6443"
+
+  windows:
+    image: 10.10.52.13:5000/lakehouse/windows:11
+    container_name: windows
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3390:3389/tcp
+      - 3390:3389/udp
+    volumes:
+      - /tmp/windows-11:/storage
+      - ../dependency/windows-11/shared:/shared
+      - ../dependency/windows-11/scripts:/oem
+      - ../dependency/windows-11/win11x64_zh.iso:/boot.iso
+    restart: always
+    stop_grace_period: 2m
