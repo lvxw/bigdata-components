@@ -758,11 +758,11 @@ services:
     restart: always
     stop_grace_period: 2m
 
-  workerspace:
-    image: 10.10.52.13:5000/lakehouse/workerspace:1.18.1
+  workspaces:
+    image: 10.10.52.13:5000/lakehouse/workspaces:1.18.1
     privileged: true
-    hostname: workerspace
-    container_name: workerspace
+    hostname: workspaces
+    container_name: workspaces
     restart: always
     networks:
       datalake-network:
