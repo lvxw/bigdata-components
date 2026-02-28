@@ -5,13 +5,11 @@ USER root
 ENV LANG C.UTF-8
 
 COPY /dependency/k8s-1.35.0/kind-cluster-config.yaml /usr/local/src/
-COPY  /dependency/k8s-1.35.0/kind.service /etc/systemd/system/
+COPY /dependency/k8s-1.35.0/kind.service /etc/systemd/system/
 
 RUN apt-get update && \
-    apt-get -y install vim dos2unix net-tools iputils-ping telnet rsync wget tree netcat curl zip unzip tree openssh-server iproute2 less lsof cron podman && \
-    apt-get clean && \
-    rm -rf /etc/localtime && \
-    ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+    apt-get -y install podman && \
+    apt-get clean
 
 RUN curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64 && \

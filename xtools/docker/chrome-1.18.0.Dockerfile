@@ -1,4 +1,4 @@
-FROM kasmweb/firefox:1.15.0-rolling
+FROM docker.io/kasmweb/chrome:1.18.0-rolling-daily
 
 USER root
 

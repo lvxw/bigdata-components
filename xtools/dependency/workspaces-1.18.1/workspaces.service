@@ -1,0 +1,12 @@
+[Unit]
+Description=My Shell Script Service
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/src/workspaces_install.sh
+User=root
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

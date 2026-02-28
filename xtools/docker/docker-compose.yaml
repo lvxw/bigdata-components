@@ -63,11 +63,11 @@ services:
     ports:
       - "6901:6901"
 
-  firefox:
-    image: 10.10.52.13:5000/lakehouse/firefox:1.15.0
+  chrome:
+    image: 10.10.52.13:5000/lakehouse/chrome:1.18.0
     privileged: true
-    hostname: firefox
-    container_name: firefox
+    hostname: chrome
+    container_name: chrome
     restart: always
     environment:
       VNC_PW: password
@@ -757,3 +757,14 @@ services:
       - ../dependency/windows-11/win11x64_zh.iso:/boot.iso
     restart: always
     stop_grace_period: 2m
+
+  workerspace:
+    image: 10.10.52.13:5000/lakehouse/workerspace:1.18.1
+    privileged: true
+    hostname: workerspace
+    container_name: workerspace
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8443:8443"
