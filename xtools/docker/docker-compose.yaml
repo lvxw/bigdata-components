@@ -768,3 +768,21 @@ services:
       datalake-network:
     ports:
       - "8443:8443"
+
+  openclaw:
+    image: 10.10.52.13:5000/lakehouse/openclaw:2026.3.1
+    privileged: true
+    hostname: openclaw
+    container_name: openclaw
+    restart: always
+    networks:
+      datalake-network:
+
+  claudecode:
+    image: 10.10.52.13:5000/lakehouse/claudecode:2.1.63
+    privileged: true
+    hostname: claudecode
+    container_name: claudecode
+    restart: always
+    networks:
+      datalake-network:
