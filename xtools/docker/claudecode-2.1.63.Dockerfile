@@ -8,6 +8,8 @@ RUN bash /usr/local/src/install.sh && \
     rm -rf /usr/local/src/install.sh && \
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> /etc/profile
 
+ENV PATH "$HOME/.local/bin:$PATH"
+
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo "source /etc/profile" >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh \

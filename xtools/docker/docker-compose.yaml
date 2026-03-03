@@ -750,6 +750,8 @@ services:
       - 8006:8006
       - 3390:3389/tcp
       - 3390:3389/udp
+    networks:
+      datalake-network:
     volumes:
       - /tmp/windows-11:/storage
       - ../dependency/windows-11/shared:/shared

@@ -12,6 +12,8 @@ export KUBECONFIG=/tmp/config:/tmp/config2
 
 kubectl config view --flatten > /root/.kube/config
 
+cp -f /root/.kube/config /mnt/c/Users/slwx/.kube/
+
 unset KUBECONFIG
 
 kubectl config use-context kind-podman-k8s-cluster
