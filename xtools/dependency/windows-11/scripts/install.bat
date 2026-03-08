@@ -26,7 +26,7 @@ if not exist "C:\Program Files\Git\bin\git.exe" (
 if not exist "C:\Users\docker\.local\bin\claude.exe" (
     echo "installing claude code"
     powershell -ExecutionPolicy Bypass -File "C:\Users\docker\Desktop\Shared\install.ps1"
-    powershell -Command "[Environment]::SetEnvironmentVariable(\"Path\", \"C:\Users\docker\.local\bin;$([Environment]::GetEnvironmentVariable('Path', 'User'))\", \"User\")"
+    powershell -Command "[Environment]::SetEnvironmentVariable('Path', 'C:\Users\docker\.local\bin;' + [Environment]::GetEnvironmentVariable('Path', 'User'), 'User')"
     powershell -Command "$lines=[System.Collections.ArrayList](gc 'C:\Users\docker\.claude.json');$lines.Insert([Math]::Max(0,$lines.Count-1),',\"hasCompletedOnboarding\": true');$lines|sc 'C:\Users\docker\.claude.json'"
     echo "Installation claude code complete."
 ) else (
