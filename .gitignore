@@ -1,5 +1,6 @@
 .idea
 *.iml
-windows-11
+**/windows-11/shared/*.exe
 **/workspaces-*/*.tar.gz
 **/desktop-*/*.tgz
+**/windows-11/*.iso
