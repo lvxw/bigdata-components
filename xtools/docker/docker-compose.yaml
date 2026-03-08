@@ -22,47 +22,6 @@ services:
       - /data/docker/harbor/data:/data
       - /data/docker/harbor/docker:/var/lib/docker/
 
-  my-kasm:
-    image: 10.10.52.13:5000/lakehouse/kasm:1.0.0
-    privileged: true
-    hostname: my-kasm
-    container_name: my-kasm
-    restart: always
-    environment:
-      VNC_PW: password
-    networks:
-      datalake-network:
-    ports:
-      - "6902:6901"
-      - "8000:8000"
-      - "8888:8888"
-      - "5005:5005"
-      - "5006:5006"
-      - "22222:22"
-    volumes:
-      - /mnt/e:/mnt/e
-      - /mnt/c:/mnt/c
-
-  desktop:
-    image: 10.10.52.13:5000/lakehouse/desktop:1.15.0
-    extra_hosts:
-      - "my-ubuntu:172.30.76.81"
-    volumes:
-      - /:/mnt/host
-      - /mnt/e:/mnt/e
-      - /mnt/c:/mnt/c
-    privileged: true
-    hostname: desktop
-    container_name: desktop
-    restart: always
-    environment:
-      KASM_USER: kasm-user
-      VNC_PW: password
-    networks:
-      datalake-network:
-    ports:
-      - "6901:6901"
-
   chrome:
     image: 10.10.52.13:5000/lakehouse/chrome:1.18.0
     privileged: true
@@ -522,12 +481,12 @@ services:
     ports:
       - "60007:60007"
 
-  ollama:
-    image: 10.10.52.13:5000/lakehouse/ollama:0.3.0
+  qwen:
+    image: 10.10.52.13:5000/lakehouse/qwen:3.5
     user: root
     privileged: true
-    hostname: ollama
-    container_name: ollama
+    hostname: qwen
+    container_name: qwen
     restart: always
     networks:
       datalake-network:
@@ -541,7 +500,7 @@ services:
     hostname: maxkb
     container_name: maxkb
     depends_on:
-      - ollama
+      - qwen
     restart: always
     networks:
       datalake-network:
@@ -738,38 +697,6 @@ services:
     ports:
       - "6443:6443"
 
-  windows:
-    image: 10.10.52.13:5000/lakehouse/windows:11
-    container_name: windows
-    devices:
-      - /dev/kvm
-      - /dev/net/tun
-    cap_add:
-      - NET_ADMIN
-    ports:
-      - 8006:8006
-      - 3390:3389/tcp
-      - 3390:3389/udp
-    networks:
-      datalake-network:
-    volumes:
-      - /tmp/windows-11:/storage
-      - ../dependency/windows-11/shared:/shared
-      - ../dependency/windows-11/scripts:/oem
-      - ../dependency/windows-11/win11x64_zh.iso:/boot.iso
-    restart: always
-    stop_grace_period: 2m
-
-  workspaces:
-    image: 10.10.52.13:5000/lakehouse/workspaces:1.18.1
-    privileged: true
-    hostname: workspaces
-    container_name: workspaces
-    restart: always
-    networks:
-      datalake-network:
-    ports:
-      - "8443:8443"
 
   openclaw:
     image: 10.10.52.13:5000/lakehouse/openclaw:2026.3.1

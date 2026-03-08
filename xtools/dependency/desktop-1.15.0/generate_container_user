@@ -1,0 +1,15 @@
+# Attempt to set the username to the kasm username
+USERNAME=${KASM_USER:-default}
+# Make the username posix compliant
+USERNAME=$(echo "$USERNAME" | sed -r 's#[^a-zA-Z0-9\._\-]#_#g')
+if ! echo "$USERNAME" | grep -qP "^[a-zA-Z0-9_\.][a-zA-Z0-9_\-\.]*"; then
+    USERNAME="default"
+fi
+export PS1="$USERNAME:\w\$ "
+
+echo "xfce4-session" > /home/kasm-user/.xsession && chmod 755 /home/kasm-user && chown kasm-user:kasm-user /home/kasm-user
+sudo su -c "echo 'xfce4-session' > ~/.xsession && chmod 755 ~ && chown $USER:$USER ~"
+sudo su -c "echo 'kasm-user:password' | sudo chpasswd"
+
+sudo su -c "service docker start"
+sudo su -c "service xrdp start"

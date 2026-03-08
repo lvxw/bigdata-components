@@ -1,6 +1,5 @@
 .idea
 *.iml
-desktop-*
-ollama-*
 windows-11
 **/workspaces-*/*.tar.gz
+**/desktop-*/*.tgz
