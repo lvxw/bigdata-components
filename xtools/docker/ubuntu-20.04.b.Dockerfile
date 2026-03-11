@@ -4,6 +4,8 @@ USER root
 
 ENV LANG C.UTF-8
 
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
+
 COPY /dependency/common/sources.list /etc/apt/
 
 RUN apt-get update && \
