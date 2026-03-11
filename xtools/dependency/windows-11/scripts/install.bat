@@ -28,8 +28,21 @@ if not exist "C:\Users\docker\.local\bin\claude.exe" (
     powershell -ExecutionPolicy Bypass -File "C:\Users\docker\Desktop\Shared\install.ps1"
     powershell -Command "[Environment]::SetEnvironmentVariable('Path', 'C:\Users\docker\.local\bin;' + [Environment]::GetEnvironmentVariable('Path', 'User'), 'User')"
     powershell -Command "$lines=[System.Collections.ArrayList](gc 'C:\Users\docker\.claude.json');$lines.Insert([Math]::Max(0,$lines.Count-1),',\"hasCompletedOnboarding\": true');$lines|sc 'C:\Users\docker\.claude.json'"
+    powershell -Command "[Environment]::SetEnvironmentVariable('ANTHROPIC_API_KEY', 'ollama', 'User')"
+    powershell -Command "[Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', 'ollama', 'User')"
+    powershell -Command "[Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'http://172.25.50.74:11434', 'User')"
     echo "Installation claude code complete."
 ) else (
     echo "Claude Code already exists, skip install"
 )
+
+if not exist "C:\Users\docker\AppData\Local\Programs\CC Switch\cc-switch.exe" (
+    echo "installing CC-Switch"
+    set MSI_FILE=C:\Users\docker\Desktop\Shared\CC-Switch-v3.11.1-Windows.msi
+    msiexec /i "%MSI_FILE%" /quiet /norestart
+    echo "Installation CC-Switch complete."
+) else (
+    echo "Visual CC-Switch already exists, skip install"
+)
+
 pause

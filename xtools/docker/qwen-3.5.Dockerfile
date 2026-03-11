@@ -5,6 +5,7 @@ ARG MODEL_paramter="0.8b"
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'export OLLAMA_HOST=0.0.0.0' >> /usr/local/bin/enterpoint.sh && \
+    echo 'export OLLAMA_CONTEXT_LENGTH=65536' >> /usr/local/bin/enterpoint.sh && \
     echo 'export OLLAMA_MODELS=/usr/local/src/models' >> /usr/local/bin/enterpoint.sh && \
     echo 'nohup ollama serve > /dev/null 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet 127.0.0.1 11434 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
