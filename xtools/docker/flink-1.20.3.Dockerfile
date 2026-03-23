@@ -3,7 +3,7 @@ FROM 10.10.52.13:5000/lakehouse/hive:3.1.3
 ARG FLINK_MAIN_VERSION="1.20"
 ARG FLINK_VERSION="${FLINK_MAIN_VERSION}.3"
 ARG PAIMON_VERSION="1.3.1"
-ARG FLUSS_VERSION="0.8.0-incubating"
+ARG FLUSS_VERSION="0.9.0-incubating"
 ARG CELEBORN_VERSION="0.6.2"
 
 RUN wget -P /usr/local/src/ https://archive.apache.org/dist/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-scala_2.12.tgz && \
@@ -26,12 +26,12 @@ RUN wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repository.cloudera.c
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-flink-${FLINK_MAIN_VERSION}/${PAIMON_VERSION}/paimon-flink-${FLINK_MAIN_VERSION}-${PAIMON_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-flink-action/${PAIMON_VERSION}/paimon-flink-action-${PAIMON_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/${PAIMON_VERSION}/paimon-s3-${PAIMON_VERSION}.jar && \
-    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-flink-${FLINK_MAIN_VERSION}/0.8.0-incubating/fluss-flink-${FLINK_MAIN_VERSION}-0.8.0-incubating.jar && \
-    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-flink-tiering/0.8.0-incubating/fluss-flink-tiering-0.8.0-incubating.jar && \
-    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-hdfs/0.8.0-incubating/fluss-fs-hdfs-0.8.0-incubating.jar && \
-    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-s3/0.8.0-incubating/fluss-fs-s3-0.8.0-incubating.jar && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-flink-${FLINK_MAIN_VERSION}/${FLUSS_VERSION}/fluss-flink-${FLINK_MAIN_VERSION}-${FLUSS_VERSION}.jar && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-flink-tiering/${FLUSS_VERSION}/fluss-flink-tiering-${FLUSS_VERSION}.jar && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-hdfs/${FLUSS_VERSION}/fluss-fs-hdfs-${FLUSS_VERSION}.jar && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-s3/${FLUSS_VERSION}/fluss-fs-s3-${FLUSS_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/celeborn/celeborn-client-flink-${FLINK_MAIN_VERSION}-shaded_2.12/${CELEBORN_VERSION}/celeborn-client-flink-${FLINK_MAIN_VERSION}-shaded_2.12-${CELEBORN_VERSION}.jar && \
-    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-lake-paimon/0.8.0-incubating/fluss-lake-paimon-0.8.0-incubating.jar && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-lake-paimon/${FLUSS_VERSION}/fluss-lake-paimon-${FLUSS_VERSION}.jar && \
     wget -P /usr/local/bin/ https://dl.min.io/client/mc/release/linux-amd64/mc
 
 COPY /dependency/flink-${FLINK_VERSION}/flink-connector-jdbc-3.3.0-${FLINK_MAIN_VERSION}-meta-service  /META-INF/services/org.apache.flink.table.factories.Factory
@@ -71,12 +71,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'hdfs dfs -mkdir -p /hive/conf' >> /usr/local/bin/enterpoint.sh && \
     echo 'hdfs dfs -put -f ${HIVE_HOME}/conf/* /hive/conf/' >> /usr/local/bin/enterpoint.sh && \
     echo 'historyserver.sh start' >> /usr/local/bin/enterpoint.sh && \
-    echo 'while [[ `beeline -u jdbc:hive2://hive:10000 -n root  -e "select count(*) from test.worker" > /dev/null 2>&1; echo $?` -ne 0 ]]' >> /usr/local/bin/enterpoint.sh && \
-    echo 'do' >> /usr/local/bin/enterpoint.sh && \
-    echo '  nohup echo "check hive sleep ......" >> ${FLINK_HOME}/log/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
-    echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
-    echo 'done' >> /usr/local/bin/enterpoint.sh && \
-    echo ' ' >> /usr/local/bin/enterpoint.sh && \
     echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet minio 9000 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
     echo 'do' >> /usr/local/bin/enterpoint.sh && \
     echo '  nohup echo "check minio sleep ......" >> ${FLINK_HOME}/log/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
@@ -84,23 +78,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'done' >> /usr/local/bin/enterpoint.sh && \
     echo 'mc alias set myminio http://minio:9000 admin admin123456 && mc mb --ignore-existing myminio/bigdata' >> /usr/local/bin/enterpoint.sh && \
     echo 'mysql -hmysql -uroot -proot -e "create database if not exists paimon_catalog;"' >> /usr/local/bin/enterpoint.sh && \
-    echo 'beeline -u jdbc:hive2://hive:10000 -n root -e "CREATE DATABASE IF NOT EXISTS rt_ods;"' >> /usr/local/bin/enterpoint.sh && \
-    echo ' ' >> /usr/local/bin/enterpoint.sh && \
-    echo 'application_id=`yarn application -list  |  grep  sql-gateway-session   |  awk '"'"'{print $1}'"'"'`'  >> /usr/local/bin/enterpoint.sh && \
-    echo 'if [[ ${application_id} != "" ]]'  >> /usr/local/bin/enterpoint.sh && \
-    echo 'then'  >> /usr/local/bin/enterpoint.sh && \
-    echo '  yarn application -kill  ${application_id}'  >> /usr/local/bin/enterpoint.sh && \
-    echo 'fi'  >> /usr/local/bin/enterpoint.sh && \
-    echo ' ' >> /usr/local/bin/enterpoint.sh && \
-    echo 'yarn-session.sh -nm sql-gateway-session -Dexecution.checkpointing.interval=5s -d'  >> /usr/local/bin/enterpoint.sh && \
-    echo ' ' >> /usr/local/bin/enterpoint.sh && \
-    echo 'nohup sql-gateway.sh start \' >> /usr/local/bin/enterpoint.sh && \
-    echo '    -Dsql-gateway.endpoint.type=hiveserver2 \' >> /usr/local/bin/enterpoint.sh && \
-    echo '    -Dsql-gateway.endpoint.hiveserver2.thrift.host=flink \' >> /usr/local/bin/enterpoint.sh && \
-    echo '    -Dsql-gateway.endpoint.hiveserver2.catalog.name=hive_catalog \' >> /usr/local/bin/enterpoint.sh && \
-    echo '    -Dsql-gateway.endpoint.hiveserver2.catalog.default-database=rt_ods \' >> /usr/local/bin/enterpoint.sh && \
-    echo '    -Dsql-gateway.endpoint.hiveserver2.thrift.port=10003 \' >> /usr/local/bin/enterpoint.sh && \
-    echo '    -Dsql-gateway.endpoint.hiveserver2.catalog.hive-conf-dir=${HIVE_HOME}/conf/  >> ${FLINK_HOME}/log/sql-gateway-hiveserver2.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo ' ' >> /usr/local/bin/enterpoint.sh && \
     echo 'sql-gateway.sh start \' >> /usr/local/bin/enterpoint.sh && \
     echo '    -Dsql-gateway.endpoint.type=rest \' >> /usr/local/bin/enterpoint.sh && \

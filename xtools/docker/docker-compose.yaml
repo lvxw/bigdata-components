@@ -105,7 +105,7 @@ services:
       - "16030:16030"
 
   hive:
-    image: 10.10.52.13:5000/lakehouse/hive:4.2.0
+    image: 10.10.52.13:5000/lakehouse/hive:3.1.3
     user: root
     privileged: true
     hostname: hive
@@ -118,8 +118,6 @@ services:
     networks:
       datalake-network:
     ports:
-      - "10000:10000"
-      - "10002:10002"
       - "9083:9083"
 
   trino:
@@ -600,7 +598,7 @@ services:
       - "8180:8080"
 
   gravitino:
-    image: 10.10.52.13:5000/lakehouse/gravitino:1.1.0
+    image: 10.10.52.13:5000/lakehouse/gravitino:1.2.0
     user: root
     privileged: true
     hostname: gravitino
@@ -631,7 +629,7 @@ services:
       - "1630:1630"
 
   fluss:
-    image: 10.10.52.13:5000/lakehouse/fluss:0.8.0-incubating
+    image: 10.10.52.13:5000/lakehouse/fluss:0.9.0-incubating
     user: root
     privileged: true
     hostname: fluss
@@ -715,3 +713,21 @@ services:
     restart: always
     networks:
       datalake-network:
+
+  oceanbase:
+    image: 10.10.52.13:5000/lakehouse/oceanbase:4.5.0.0
+    privileged: true
+    hostname: oceanbase
+    container_name: oceanbase
+    restart: always
+    environment:
+      MODE: normal
+      OB_TENANT_NAME: test
+      OB_TENANT_PASSWORD: test
+    networks:
+      datalake-network:
+    ports:
+      - "2881:2881"
+      - "2882:2882"
+      - "2983:2983"
+      - "2886:2886"

@@ -1,6 +1,12 @@
-FROM 10.10.52.13:5000/lakehouse/hadoop:3.4.3
+FROM 10.10.52.13:5000/lakehouse/hadoop:3.1.4
 
-ARG HIVE_VERSION=4.2.0
+RUN apt-get update && \
+    apt-get -y install mysql-client && \
+    apt-get clean
+
+ARG HADOOP_VERSION=3.1.4
+ARG HIVE_MAIN_VERSION=3.1
+ARG HIVE_VERSION=${HIVE_MAIN_VERSION}.3
 ARG PAIMON_VERSION="1.3.1"
 
 RUN wget -P /usr/local/src/ https://archive.apache.org/dist/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz && \
@@ -9,15 +15,20 @@ RUN wget -P /usr/local/src/ https://archive.apache.org/dist/hive/hive-${HIVE_VER
 
 COPY /dependency/hive-${HIVE_VERSION}/hive-site.xml /usr/local/apache-hive-${HIVE_VERSION}-bin/conf/
 COPY /dependency/hive-${HIVE_VERSION}/hive-env.sh /usr/local/apache-hive-${HIVE_VERSION}-bin/conf/
+COPY /dependency/hive-${HIVE_VERSION}/init.sql /usr/local/apache-hive-${HIVE_VERSION}-bin/conf/
 COPY /dependency/hive-${HIVE_VERSION}/enter-beeline.sh /usr/local/bin/
 RUN wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar
-RUN wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-hive-connector-3.1/${PAIMON_VERSION}/paimon-hive-connector-3.1-${PAIMON_VERSION}.jar
+RUN wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-hive-connector-${HIVE_MAIN_VERSION}/${PAIMON_VERSION}/paimon-hive-connector-${HIVE_MAIN_VERSION}-${PAIMON_VERSION}.jar
+
 
 RUN echo "export HIVE_HOME=/usr/local/apache-hive-${HIVE_VERSION}-bin" >> /etc/profile && \
     echo 'export PATH=${PATH}:${HIVE_HOME}/bin' >> /etc/profile && \
     dos2unix /usr/local/bin/enter-beeline.sh /usr/local/apache-hive-${HIVE_VERSION}-bin/conf/hive-env.sh && \
     chmod 755 /usr/local/bin/enter-beeline.sh && \
-    mkdir -p /usr/local/apache-hive-${HIVE_VERSION}-bin/logs /usr/local/apache-hive-${HIVE_VERSION}-bin/tmp/root /usr/local/apache-hive-${HIVE_VERSION}-bin/aux_jars
+    mkdir -p /usr/local/apache-hive-${HIVE_VERSION}-bin/logs /usr/local/apache-hive-${HIVE_VERSION}-bin/tmp && \
+    rm -rf /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/guava-19.0.jar && \
+    cp /usr/local/hadoop-${HADOOP_VERSION}/share/hadoop/common/lib/guava-27.0-jre.jar   /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/
+
 ENV HIVE_HOME /usr/local/apache-hive-${HIVE_VERSION}-bin
 ENV PATH ${PATH}:${HIVE_HOME}/bin
 
@@ -40,13 +51,15 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo '    nohup echo "check zookeeper sleep ......" >> ${HIVE_HOME}/logs/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo '    sleep 1s' >> /usr/local/bin/enterpoint.sh && \
     echo '  done' >> /usr/local/bin/enterpoint.sh && \
-    echo 'schematool -dbType mysql -initSchema --verbose > ${HIVE_HOME}/logs/initSchema.log  2>&1' >> /usr/local/bin/enterpoint.sh && \
+    echo '  nohup schematool -dbType mysql -initSchema --verbose > ${HIVE_HOME}/logs/initSchema.log  2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo 'fi' >> /usr/local/bin/enterpoint.sh && \
     echo 'nohup hive --service metastore > ${HIVE_HOME}/logs/hivemetastore.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
-    echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet hive 9083 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
+    echo 'nohup hive --service hiveserver2 > ${HIVE_HOME}/logs/hiveserver2.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
+    echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet hive 10000 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
     echo 'do' >> /usr/local/bin/enterpoint.sh && \
-    echo '  nohup echo "check hive metastore sleep ......" >> ${HIVE_HOME}/logs/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
+    echo '  nohup echo "check hive sleep ......" >> ${HIVE_HOME}/logs/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
     echo 'done' >> /usr/local/bin/enterpoint.sh && \
-    echo 'nohup hive --service hiveserver2 > ${HIVE_HOME}/logs/hiveserver2.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
+    echo 'sleep 60s' >> /usr/local/bin/enterpoint.sh && \
+    echo 'beeline -u jdbc:hive2://hive:10000 -n root -f ${HIVE_HOME}/conf/init.sql' >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh

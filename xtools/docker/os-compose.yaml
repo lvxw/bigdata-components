@@ -42,6 +42,7 @@ services:
       - 8006:8006
       - 3390:3389/tcp
       - 3390:3389/udp
+      - 18789:18789
     networks:
       os-network:
     volumes:

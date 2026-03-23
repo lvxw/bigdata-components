@@ -28,9 +28,7 @@ if not exist "C:\Users\docker\.local\bin\claude.exe" (
     powershell -ExecutionPolicy Bypass -File "C:\Users\docker\Desktop\Shared\install.ps1"
     powershell -Command "[Environment]::SetEnvironmentVariable('Path', 'C:\Users\docker\.local\bin;' + [Environment]::GetEnvironmentVariable('Path', 'User'), 'User')"
     powershell -Command "$lines=[System.Collections.ArrayList](gc 'C:\Users\docker\.claude.json');$lines.Insert([Math]::Max(0,$lines.Count-1),',\"hasCompletedOnboarding\": true');$lines|sc 'C:\Users\docker\.claude.json'"
-    powershell -Command "[Environment]::SetEnvironmentVariable('ANTHROPIC_API_KEY', 'ollama', 'User')"
-    powershell -Command "[Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', 'ollama', 'User')"
-    powershell -Command "[Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'http://172.25.50.74:11434', 'User')"
+    xcopy "C:\Users\docker\Desktop\Shared\claudeCode-settings.json" "C:\Users\docker\.claude\settings.json" /Y
     echo "Installation claude code complete."
 ) else (
     echo "Claude Code already exists, skip install"
@@ -38,11 +36,20 @@ if not exist "C:\Users\docker\.local\bin\claude.exe" (
 
 if not exist "C:\Users\docker\AppData\Local\Programs\CC Switch\cc-switch.exe" (
     echo "installing CC-Switch"
-    set MSI_FILE=C:\Users\docker\Desktop\Shared\CC-Switch-v3.11.1-Windows.msi
-    msiexec /i "%MSI_FILE%" /quiet /norestart
+    msiexec /i C:\Users\docker\Desktop\Shared\CC-Switch-v3.12.1-Windows.msi /quiet /norestart
     echo "Installation CC-Switch complete."
 ) else (
     echo "Visual CC-Switch already exists, skip install"
+)
+
+if not exist "C:\Users\docker\AppData\Roaming\npm\openclaw.cmd" (
+    echo "download openclaw"
+    powershell -Command "iwr -useb https://openclaw.ai/install.ps1 | iex"
+    xcopy "C:\Users\docker\Desktop\Shared\install-openClaw.ps1" "C:\Users\docker\Desktop" /Y
+    xcopy "C:\Users\docker\Desktop\Shared\start-openClaw.ps1" "C:\Users\docker\Desktop" /Y
+    echo "download openclaw complete."
+) else (
+    echo "Visual openclaw already exists, skip install"
 )
 
 pause

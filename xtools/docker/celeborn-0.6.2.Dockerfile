@@ -1,4 +1,4 @@
-FROM 10.10.52.13:5000/lakehouse/ubuntu:20.04.j
+FROM 10.10.52.13:5000/lakehouse/ubuntu:24.04.j
 
 ARG CELEBORN_VERSION="0.6.2"
 

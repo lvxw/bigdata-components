@@ -12,8 +12,8 @@ SET table.exec.sink.upsert-materialize = none;
 
 CREATE CATALOG `hive_catalog` WITH (
     'type' = 'hive',
-    'default-database' = 'rt_ods',
-    'hive-conf-dir'='/usr/local/apache-hive-3.1.2-bin/conf'
+    'default-database' = 'default',
+    'hive-conf-dir'='hdfs:///hive/conf'
 );
 
 CREATE CATALOG `mysql_catalog` WITH(
@@ -30,14 +30,6 @@ CREATE CATALOG `paimon_catalog` WITH (
   'uri' = 'thrift://hive:9083',
   'hive-conf-dir' = 'hdfs:///hive/conf',
   'metastore' = 'hive'
-);
-
-CREATE CATALOG `doris_catalog` WITH(
-  'username' = 'root',
-  'password' = 'root',
-  'base-url' = 'jdbc:mysql://doris:49030',
-  'default-database' = 'information_schema',
-  'type' = 'jdbc'
 );
 
 CREATE CATALOG doris_catalog WITH (
@@ -70,7 +62,7 @@ CREATE CATALOG fluss_catalog WITH (
 
 USE CATALOG `hive_catalog`;
 
-LOAD MODULE hive WITH ('hive-version' = '3.1.2');
+LOAD MODULE hive WITH ('hive-version' = '3.1.3');
 
 USE MODULES core, hive;
 
