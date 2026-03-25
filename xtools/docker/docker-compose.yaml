@@ -731,3 +731,16 @@ services:
       - "2882:2882"
       - "2983:2983"
       - "2886:2886"
+
+  inlong:
+    image: 10.10.52.13:5000/lakehouse/inlong:2.3.0
+    privileged: true
+    hostname: inlong
+    container_name: inlong
+    depends_on:
+      - mysql
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9080:80"
