@@ -606,6 +606,7 @@ services:
     depends_on:
       - mysql
       - hadoop
+      - hive
     restart: always
     networks:
       datalake-network:
