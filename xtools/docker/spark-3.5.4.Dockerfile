@@ -15,14 +15,17 @@ COPY /dependency/spark-${SPARK_VERSION}/spark-defaults.conf /usr/local/spark-${S
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-client.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-gravitino.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-paimon.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
-COPY /dependency/spark-${SPARK_VERSION}/init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
+COPY /dependency/spark-${SPARK_VERSION}/spark-sql-fluss.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
+COPY /dependency/spark-${SPARK_VERSION}/paimon_catalog_init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
+COPY /dependency/spark-${SPARK_VERSION}/fluss_catalog_init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
 
 RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-spark-3.5/1.3.1/paimon-spark-3.5-1.3.1.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/gravitino/gravitino-spark-common/${GRAVITINO_VERSION}/gravitino-spark-common-${GRAVITINO_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/gravitino/gravitino-spark-connector-runtime-3.5_2.12/${GRAVITINO_VERSION}/gravitino-spark-connector-runtime-3.5_2.12-${GRAVITINO_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/celeborn/celeborn-client-spark-3-shaded_2.12/${CELEBORN_VERSION}/celeborn-client-spark-3-shaded_2.12-${CELEBORN_VERSION}.jar && \
-    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo1.maven.org/maven2/org/apache/fluss/fluss-spark-3.5_2.12/0.9.0-incubating/fluss-spark-3.5_2.12-0.9.0-incubating.jar
+    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo1.maven.org/maven2/org/apache/fluss/fluss-spark-3.5_2.12/${FLUSS_VERSION}/fluss-spark-3.5_2.12-${FLUSS_VERSION}.jar && \
+    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-hdfs/${FLUSS_VERSION}/fluss-fs-hdfs-${FLUSS_VERSION}.jar
 
 RUN echo "export SPARK_HOME=/usr/local/spark-${SPARK_VERSION}-bin-hadoop3" >> /etc/profile && \
     echo 'export PATH=${PATH}:${SPARK_HOME}/bin' >> /etc/profile && \
