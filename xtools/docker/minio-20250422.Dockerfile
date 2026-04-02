@@ -18,6 +18,9 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
     echo 'done' >> /usr/local/bin/enterpoint.sh && \
     echo 'mc alias set minio http://minio:9000 admin admin123456' >> /usr/local/bin/enterpoint.sh && \
+    echo 'mc mb minio/bigdata' >> /usr/local/bin/enterpoint.sh && \
+    echo 'mc mb minio/test' >> /usr/local/bin/enterpoint.sh && \
+    echo 'mc cp /root/.bashrc minio/test/' >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]
