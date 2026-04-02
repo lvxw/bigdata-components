@@ -13,6 +13,7 @@ COPY /dependency/hive-${HIVE_VERSION}/hive-env.sh /usr/local/apache-hive-${HIVE_
 RUN wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \
     wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-hive-connector-3.1/${PAIMON_VERSION}/paimon-hive-connector-3.1-${PAIMON_VERSION}.jar && \
     wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar && \
+    wget -P /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/ https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.35.4/bundle-2.35.4.jar && \
     rm -rf /usr/local/apache-hive-${HIVE_VERSION}-bin/lib/commons-collections4-4.1.jar
 
 RUN echo "export HIVE_HOME=/usr/local/apache-hive-${HIVE_VERSION}-bin" >> /etc/profile && \

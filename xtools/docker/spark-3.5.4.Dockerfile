@@ -12,14 +12,18 @@ RUN wget -P /usr/local/src/ https://archive.apache.org/dist/spark/spark-${SPARK_
     rm -rf /usr/local/src/spark-${SPARK_VERSION}-bin-hadoop3.tgz
 
 COPY /dependency/spark-${SPARK_VERSION}/spark-defaults.conf /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
+COPY /dependency/spark-${SPARK_VERSION}/spark-env.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-client.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-gravitino.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-paimon.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
+COPY /dependency/spark-${SPARK_VERSION}/spark-sql-paimon-s3.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-fluss.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/paimon_catalog_init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
 COPY /dependency/spark-${SPARK_VERSION}/fluss_catalog_init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
 
-RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-spark-3.5/1.3.1/paimon-spark-3.5-1.3.1.jar && \
+RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-spark-3.5/${PAIMON_VERSION}/paimon-spark-3.5-${PAIMON_VERSION}.jar && \
+    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/${PAIMON_VERSION}/paimon-s3-${PAIMON_VERSION}.jar && \
+    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.35.4/bundle-2.35.4.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/gravitino/gravitino-spark-common/${GRAVITINO_VERSION}/gravitino-spark-common-${GRAVITINO_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/gravitino/gravitino-spark-connector-runtime-3.5_2.12/${GRAVITINO_VERSION}/gravitino-spark-connector-runtime-3.5_2.12-${GRAVITINO_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \

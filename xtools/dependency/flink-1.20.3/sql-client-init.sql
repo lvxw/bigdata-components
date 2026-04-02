@@ -24,14 +24,6 @@ CREATE CATALOG `mysql_catalog` WITH(
   'type' = 'jdbc'
 );
 
-CREATE CATALOG `paimon_catalog` WITH (
-  'type' = 'paimon',
-  'hadoop.dfs.client.use.datanode.hostname' = 'true',
-  'uri' = 'thrift://hive:9083',
-  'hive-conf-dir' = 'hdfs:///hive/conf',
-  'metastore' = 'hive'
-);
-
 CREATE CATALOG doris_catalog WITH (
     'type' = 'doris',
     'fenodes' = 'doris:48030',
@@ -41,7 +33,26 @@ CREATE CATALOG doris_catalog WITH (
     'default-database' = 'test'
 );
 
-CREATE CATALOG paimon_catalog_s3 WITH (
+CREATE CATALOG `paimon_hive_catalog` WITH (
+    'type' = 'paimon',
+    'hadoop.dfs.client.use.datanode.hostname' = 'true',
+    'uri' = 'thrift://hive:9083',
+    'hive-conf-dir' = 'hdfs:///hive/conf',
+    'metastore' = 'hive'
+);
+
+CREATE CATALOG paimon_hive_s3_catalog WITH (
+    'type' = 'paimon',
+    'hadoop.dfs.client.use.datanode.hostname' = 'true',
+    'uri' = 'thrift://hive:9083',
+    'metastore' = 'hive',
+    'warehouse' = 's3a://bigdata/lakehouse',
+    's3.endpoint' = 'http://minio:9000',
+    's3.access-key' = 'admin',
+    's3.secret-key' = 'admin123456'
+);
+
+CREATE CATALOG paimon_jdbc_s3_catalog WITH (
     'type' = 'paimon',
     'metastore' = 'jdbc',
     'uri' = 'jdbc:mysql://mysql:3306/paimon_catalog',
@@ -51,9 +62,41 @@ CREATE CATALOG paimon_catalog_s3 WITH (
     'warehouse' = 's3://bigdata/lakehouse',
     's3.endpoint' = 'http://minio:9000',
     's3.access-key' = 'admin',
-    's3.secret-key' = 'admin123456',
-    's3.path.style.access' = 'true'
+    's3.secret-key' = 'admin123456'
 );
+
+CREATE CATALOG iceberg_catalog WITH (
+    'type'='iceberg',
+    'catalog-type'='hive',
+    'uri'='thrift://hive:9083',
+    'clients'='5',
+    'property-version'='2',
+    'warehouse'='/warehouse/tablespace/managed/hive'
+);
+
+
+CREATE CATALOG iceberg_s3_catalog WITH (
+    'type' = 'iceberg',
+    'catalog-type' = 'hadoop',
+    'warehouse' = 's3a://bigdata/lakehouse',
+    's3a.access-key-id' = 'admin',
+    's3a.secret-access-key' = 'admin123456',
+    's3a.endpoint' = 'http://minio:9000',
+    's3a.path-style-access' = 'true'
+);
+
+       CREATE CATALOG iceberg_s3_catalog WITH (
+    'type' = 'iceberg',
+    'catalog-type' = 'hadoop',
+    'warehouse' = 's3://bigdata/lakehouse',
+    's3.access-key-id' = 'admin',
+    's3.secret-access-key' = 'admin123456',
+    's3.endpoint' = 'http://minio:9000',
+    's3.path-style-access' = 'true'
+);
+
+create  database iceberg_s3_catalog.iceberg_s3_db;
+
 
 CREATE CATALOG fluss_catalog WITH (
   'type' = 'fluss',

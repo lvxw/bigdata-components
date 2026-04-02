@@ -67,6 +67,8 @@ services:
     privileged: true
     hostname: hadoop
     container_name: hadoop
+    depends_on:
+      - minio
     restart: always
     networks:
       datalake-network:
@@ -114,6 +116,7 @@ services:
       - mysql
       - hadoop
       - zookeeper
+      - minio
     restart: always
     networks:
       datalake-network:
@@ -192,6 +195,7 @@ services:
       - hadoop
       - gravitino
       - celeborn
+      - hive
     restart: always
     networks:
       datalake-network:

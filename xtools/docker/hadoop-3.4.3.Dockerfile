@@ -12,7 +12,8 @@ COPY /dependency/hadoop-${HADOOP_VERSION}/mapred-site.xml /usr/local/hadoop-${HA
 COPY /dependency/hadoop-${HADOOP_VERSION}/yarn-site.xml /usr/local/hadoop-${HADOOP_VERSION}/etc/hadoop/
 COPY /dependency/hadoop-${HADOOP_VERSION}/capacity-scheduler.xml /usr/local/hadoop-${HADOOP_VERSION}/etc/hadoop/
 
-RUN mkdir -p /data/hadoop/dfs/name /data/hadoop/dfs/data /data/hadoop/tmp && \
+RUN wget -P /usr/local/hadoop-${HADOOP_VERSION}/share/hadoop/hdfs/ https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.35.4/bundle-2.35.4.jar && \
+    mkdir -p /data/hadoop/dfs/name /data/hadoop/dfs/data /data/hadoop/tmp && \
     sed -i 's/java-8-openjdk-amd64/java-17-openjdk-amd64/' /etc/profile && \
     echo "export HADOOP_HOME=/usr/local/hadoop-${HADOOP_VERSION}" >> /etc/profile && \
     echo "export HADOOP_CONF_DIR=/usr/local/hadoop-${HADOOP_VERSION}/etc/hadoop" >> /etc/profile && \

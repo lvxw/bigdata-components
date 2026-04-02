@@ -3,6 +3,7 @@ FROM 10.10.52.13:5000/lakehouse/hive:3.1.3
 ARG FLINK_MAIN_VERSION="1.20"
 ARG FLINK_VERSION="${FLINK_MAIN_VERSION}.3"
 ARG PAIMON_VERSION="1.3.1"
+ARG ICEBERG_VERSION="1.10.1"
 ARG FLUSS_VERSION="0.9.0-incubating"
 ARG CELEBORN_VERSION="0.6.2"
 
@@ -10,8 +11,7 @@ RUN wget -P /usr/local/src/ https://archive.apache.org/dist/flink/flink-${FLINK_
     tar zxvf /usr/local/src/flink-${FLINK_VERSION}-bin-scala_2.12.tgz -C /usr/local/ && \
     rm -rf /usr/local/src/flink-${FLINK_VERSION}-bin-scala_2.12.tgz
 
-RUN wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repository.cloudera.com/repository/cloudera-repos/org/apache/flink/flink-shaded-hadoop-3-uber/3.1.1.7.2.9.0-173-9.0/flink-shaded-hadoop-3-uber-3.1.1.7.2.9.0-173-9.0.jar && \
-    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-table-api-java-uber/${FLINK_VERSION}/flink-table-api-java-uber-${FLINK_VERSION}.jar && \
+RUN wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-table-api-java-uber/${FLINK_VERSION}/flink-table-api-java-uber-${FLINK_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-table-api-scala-bridge_2.12/${FLINK_VERSION}/flink-table-api-scala-bridge_2.12-${FLINK_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-hive-3.1.3_2.12/${FLINK_VERSION}/flink-sql-connector-hive-3.1.3_2.12-${FLINK_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.4.0-${FLINK_MAIN_VERSION}/flink-sql-connector-kafka-3.4.0-${FLINK_MAIN_VERSION}.jar && \
@@ -32,7 +32,9 @@ RUN wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repository.cloudera.c
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-s3/${FLUSS_VERSION}/fluss-fs-s3-${FLUSS_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/celeborn/celeborn-client-flink-${FLINK_MAIN_VERSION}-shaded_2.12/${CELEBORN_VERSION}/celeborn-client-flink-${FLINK_MAIN_VERSION}-shaded_2.12-${CELEBORN_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-lake-paimon/${FLUSS_VERSION}/fluss-lake-paimon-${FLUSS_VERSION}.jar && \
-    wget -P /usr/local/bin/ https://dl.min.io/client/mc/release/linux-amd64/mc
+    wget -P /usr/local/bin/ https://dl.min.io/client/mc/release/linux-amd64/mc && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.35.4/bundle-2.35.4.jar && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/iceberg/iceberg-flink-runtime-1.20/${ICEBERG_VERSION}/iceberg-flink-runtime-1.20-${ICEBERG_VERSION}.jar
 
 COPY /dependency/flink-${FLINK_VERSION}/flink-connector-jdbc-3.3.0-${FLINK_MAIN_VERSION}-meta-service  /META-INF/services/org.apache.flink.table.factories.Factory
 COPY /dependency/flink-${FLINK_VERSION}/config.yaml /usr/local/flink-${FLINK_VERSION}/conf/
@@ -40,9 +42,14 @@ COPY /dependency/flink-${FLINK_VERSION}/enter-beeline.sh /usr/local/bin/
 COPY /dependency/flink-${FLINK_VERSION}/enter-sql-client.sh /usr/local/bin/
 COPY /dependency/flink-${FLINK_VERSION}/sql-client-init.sql /usr/local/flink-${FLINK_VERSION}/conf/
 
-RUN zip -d /usr/local/flink-${FLINK_VERSION}/lib/flink-sql-connector-hive-3.1.3_2.12-${FLINK_VERSION}.jar org/apache/calcite/\* && \
+RUN cp /usr/local/hadoop-3.4.3/share/hadoop/client/hadoop-client-runtime-3.4.3.jar /usr/local/flink-${FLINK_VERSION}/lib/ && \
+    cp /usr/local/hadoop-3.4.3/share/hadoop/client/hadoop-client-runtime-3.4.3.jar /usr/local/flink-${FLINK_VERSION}/lib/ && \
+    cp /usr/local/hadoop-3.4.3/share/hadoop/client/hadoop-client-api-3.4.3.jar /usr/local/flink-${FLINK_VERSION}/lib/ && \
+    cp /usr/local/hadoop-3.4.3/share/hadoop/hdfs/hadoop-hdfs-3.4.3.jar /usr/local/flink-${FLINK_VERSION}/lib/ && \
+    cp /usr/local/hadoop-3.4.3/share/hadoop/mapreduce/hadoop-mapreduce-client-core-3.4.3.jar /usr/local/flink-${FLINK_VERSION}/lib/ && \
+    cp /usr/local/hadoop-3.4.3/share/hadoop/common/hadoop-common-3.4.3.jar /usr/local/flink-${FLINK_VERSION}/lib/ && \
+    zip -d /usr/local/flink-${FLINK_VERSION}/lib/flink-sql-connector-hive-3.1.3_2.12-${FLINK_VERSION}.jar org/apache/calcite/\* && \
     zip -d /usr/local/flink-${FLINK_VERSION}/lib/flink-sql-connector-hive-3.1.3_2.12-${FLINK_VERSION}.jar org/apache/orc/\* && \
-    zip -d /usr/local/flink-${FLINK_VERSION}/lib/flink-shaded-hadoop-3-uber-3.1.1.7.2.9.0-173-9.0.jar org/apache/commons/cli/\* && \
     zip -u /usr/local/flink-${FLINK_VERSION}/lib/flink-connector-jdbc-3.3.0-${FLINK_MAIN_VERSION}.jar /META-INF/services/org.apache.flink.table.factories.Factory && \
     echo "export FLINK_HOME=/usr/local/flink-${FLINK_VERSION}" >> /etc/profile && \
     echo 'export PATH=${PATH}F:${FLINK_HOME}/bin' >> /etc/profile && \
