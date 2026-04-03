@@ -28,8 +28,9 @@ RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.mav
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/gravitino/gravitino-spark-connector-runtime-3.5_2.12/${GRAVITINO_VERSION}/gravitino-spark-connector-runtime-3.5_2.12-${GRAVITINO_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/celeborn/celeborn-client-spark-3-shaded_2.12/${CELEBORN_VERSION}/celeborn-client-spark-3-shaded_2.12-${CELEBORN_VERSION}.jar && \
-    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo1.maven.org/maven2/org/apache/fluss/fluss-spark-3.5_2.12/${FLUSS_VERSION}/fluss-spark-3.5_2.12-${FLUSS_VERSION}.jar && \
-    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-fs-hdfs/${FLUSS_VERSION}/fluss-fs-hdfs-${FLUSS_VERSION}.jar
+    rm -rf /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/hadoop-client-api-3.3.4.jar && \
+    rm -rf /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/hadoop-client-runtime-3.3.4.jar && \
+    rm -rf /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/hadoop-yarn-server-web-proxy-3.3.4.jar
 
 RUN echo "export SPARK_HOME=/usr/local/spark-${SPARK_VERSION}-bin-hadoop3" >> /etc/profile && \
     echo 'export PATH=${PATH}:${SPARK_HOME}/bin' >> /etc/profile && \
