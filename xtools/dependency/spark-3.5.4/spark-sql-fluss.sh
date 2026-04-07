@@ -4,4 +4,4 @@ spark-sql --master yarn --packages org.apache.fluss:fluss-spark-3.5_2.12:0.9.0-i
   --conf spark.sql.catalog.fluss_catalog=org.apache.fluss.spark.SparkCatalog \
   --conf spark.sql.catalog.fluss_catalog.bootstrap.servers=fluss:9123 \
   --conf spark.sql.extensions=org.apache.fluss.spark.FlussSparkSessionExtensions \
-  -i ${SPARK_HOME}/conf/fluss_catalog_init.sql
+   --conf spark.sql.defaultCatalog=fluss_catalog
