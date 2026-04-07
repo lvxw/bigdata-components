@@ -38,7 +38,6 @@ RUN wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org
 
 COPY /dependency/flink-${FLINK_VERSION}/flink-connector-jdbc-3.3.0-${FLINK_MAIN_VERSION}-meta-service  /META-INF/services/org.apache.flink.table.factories.Factory
 COPY /dependency/flink-${FLINK_VERSION}/config.yaml /usr/local/flink-${FLINK_VERSION}/conf/
-COPY /dependency/flink-${FLINK_VERSION}/enter-beeline.sh /usr/local/bin/
 COPY /dependency/flink-${FLINK_VERSION}/enter-sql-client.sh /usr/local/bin/
 COPY /dependency/flink-${FLINK_VERSION}/sql-client-init.sql /usr/local/flink-${FLINK_VERSION}/conf/
 
