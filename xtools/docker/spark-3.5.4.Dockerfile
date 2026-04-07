@@ -17,6 +17,8 @@ COPY /dependency/spark-${SPARK_VERSION}/spark-sql-client.sh /usr/local/spark-${S
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-gravitino.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-paimon.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-paimon-s3.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
+COPY /dependency/spark-${SPARK_VERSION}/spark-sql-iceberg.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
+COPY /dependency/spark-${SPARK_VERSION}/spark-sql-iceberg-s3.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-fluss.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/paimon_catalog_init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/
 COPY /dependency/spark-${SPARK_VERSION}/fluss_catalog_init.sql /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/

@@ -65,7 +65,7 @@ CREATE CATALOG paimon_jdbc_s3_catalog WITH (
     's3.secret-key' = 'admin123456'
 );
 
-CREATE CATALOG iceberg_catalog WITH (
+CREATE CATALOG iceberg_hive_catalog WITH (
     'type'='iceberg',
     'catalog-type'='hive',
     'uri'='thrift://hive:9083',
@@ -74,10 +74,12 @@ CREATE CATALOG iceberg_catalog WITH (
     'warehouse'='/warehouse/tablespace/managed/hive'
 );
 
-
-CREATE CATALOG iceberg_s3_catalog WITH (
-    'type' = 'iceberg',
-    'catalog-type' = 'hadoop',
+CREATE CATALOG iceberg_hive_s3_catalog WITH (
+    'type'='iceberg',
+    'catalog-type'='hive',
+    'uri'='thrift://hive:9083',
+    'clients'='5',
+    'property-version'='2',
     'warehouse' = 's3a://bigdata/lakehouse',
     's3a.access-key-id' = 'admin',
     's3a.secret-access-key' = 'admin123456',
@@ -85,23 +87,10 @@ CREATE CATALOG iceberg_s3_catalog WITH (
     's3a.path-style-access' = 'true'
 );
 
-       CREATE CATALOG iceberg_s3_catalog WITH (
-    'type' = 'iceberg',
-    'catalog-type' = 'hadoop',
-    'warehouse' = 's3://bigdata/lakehouse',
-    's3.access-key-id' = 'admin',
-    's3.secret-access-key' = 'admin123456',
-    's3.endpoint' = 'http://minio:9000',
-    's3.path-style-access' = 'true'
-);
-
-create  database iceberg_s3_catalog.iceberg_s3_db;
-
-
-CREATE CATALOG fluss_catalog WITH (
-  'type' = 'fluss',
-  'bootstrap.servers' = 'fluss:9123'
-);
+-- CREATE CATALOG fluss_catalog WITH (
+--   'type' = 'fluss',
+--   'bootstrap.servers' = 'fluss:9123'
+-- );
 
 USE CATALOG `hive_catalog`;
 

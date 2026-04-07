@@ -15,4 +15,5 @@ spark-sql --master yarn \
   --conf spark.hadoop.fs.s3a.access.key=admin \
   --conf spark.hadoop.fs.s3a.secret.key=admin123456 \
   --conf spark.hadoop.fs.s3a.endpoint=http://minio:9000 \
-  --conf spark.hadoop.fs.s3a.path.style.access=true
+  --conf spark.hadoop.fs.s3a.path.style.access=true \
+ --conf spark.sql.defaultCatalog=paimon_catalog
