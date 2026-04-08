@@ -7,7 +7,9 @@ ARG FLUSS_VERSION="0.9.0-incubating"
 RUN wget -P /usr/local/src/ https://archive.apache.org/dist/incubator/fluss/fluss-${FLUSS_VERSION}/fluss-${FLUSS_VERSION}-bin.tgz && \
     tar zxvf /usr/local/src/fluss-${FLUSS_VERSION}-bin.tgz -C /usr/local/ && \
     rm -rf /usr/local/src/fluss-${FLUSS_VERSION}-bin.tgz && \
-    cp -r /usr/local/flink-${FLINK_VERSION}/lib/flink-sql-connector-hive-3.1.3_2.12-${FLINK_VERSION}.jar /usr/local/fluss-${FLUSS_VERSION}/plugins/paimon/
+    cp -r /usr/local/flink-${FLINK_VERSION}/lib/flink-sql-connector-hive-3.1.3_2.12-${FLINK_VERSION}.jar /usr/local/fluss-${FLUSS_VERSION}/plugins/paimon/ && \
+    wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-flink-tiering/${FLUSS_VERSION}/fluss-flink-tiering-${FLUSS_VERSION}.jar
+
 
 COPY /dependency/fluss-${FLUSS_VERSION}/server.yaml /usr/local/fluss-${FLUSS_VERSION}/conf/
 COPY /dependency/fluss-${FLUSS_VERSION}/enter-sql-client.sh /usr/local/bin/
@@ -66,5 +68,5 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo '  nohup echo "check fluss sleep ......" >> ${FLUSS_HOME}/log/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
     echo 'done' >> /usr/local/bin/enterpoint.sh && \
-    echo "flink run-application -t yarn-application ${FLINK_HOME}/lib/fluss-flink-tiering-${FLUSS_VERSION}.jar --fluss.bootstrap.servers fluss:9123 --datalake.format paimon --datalake.paimon.metastore hive --datalake.paimon.uri thrift://hive:9083 --datalake.paimon.warehouse hdfs:///warehouse/tablespace/managed/hive --datalake.paimon.hadoop-conf-dir hdfs:///hadoop/conf --datalake.paimon.hive-conf-dir hdfs:///hive/conf" >> /usr/local/bin/enterpoint.sh && \
+    echo "flink run-application -t yarn-application -Dyarn.application.name=Fluss-Lake-Tiering-Service ${FLINK_HOME}/lib/fluss-flink-tiering-${FLUSS_VERSION}.jar --fluss.bootstrap.servers fluss:9123 --datalake.format paimon --datalake.paimon.metastore hive --datalake.paimon.uri thrift://hive:9083 --datalake.paimon.warehouse hdfs:///warehouse/tablespace/managed/hive --datalake.paimon.hadoop-conf-dir hdfs:///hadoop/conf --datalake.paimon.hive-conf-dir hdfs:///hive/conf" >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh

@@ -59,7 +59,7 @@ CREATE CATALOG paimon_jdbc_s3_catalog WITH (
     'jdbc.user' = 'root',
     'jdbc.password' = 'root',
     'catalog-key'='jdbc',
-    'warehouse' = 's3://bigdata/lakehouse',
+    'warehouse' = 's3a://bigdata/lakehouse',
     's3.endpoint' = 'http://minio:9000',
     's3.access-key' = 'admin',
     's3.secret-key' = 'admin123456'
@@ -71,7 +71,7 @@ CREATE CATALOG iceberg_hive_catalog WITH (
     'uri'='thrift://hive:9083',
     'clients'='5',
     'property-version'='2',
-    'warehouse'='/warehouse/tablespace/managed/hive'
+    'warehouse'='hdfs://hadoop:8020/warehouse/tablespace/managed/hive'
 );
 
 CREATE CATALOG iceberg_hive_s3_catalog WITH (
@@ -87,10 +87,10 @@ CREATE CATALOG iceberg_hive_s3_catalog WITH (
     's3a.path-style-access' = 'true'
 );
 
--- CREATE CATALOG fluss_catalog WITH (
---   'type' = 'fluss',
---   'bootstrap.servers' = 'fluss:9123'
--- );
+CREATE CATALOG fluss_catalog WITH (
+  'type' = 'fluss',
+  'bootstrap.servers' = 'fluss:9123'
+);
 
 USE CATALOG `hive_catalog`;
 
