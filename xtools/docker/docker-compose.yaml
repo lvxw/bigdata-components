@@ -749,3 +749,25 @@ services:
       datalake-network:
     ports:
       - "9080:80"
+
+  bigtopmanager:
+    image: 10.10.52.13:5000/lakehouse/bigtopmanager:1.1.0
+    privileged: true
+    hostname: bigtopmanager
+    container_name: bigtopmanager
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "18080:18080"
+
+  ambari:
+    image: 10.10.52.13:5000/lakehouse/ambari:3.0.0
+    privileged: true
+    hostname: ambari
+    container_name: ambari
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "18080:8080"
