@@ -74,6 +74,14 @@ CREATE CATALOG iceberg_hive_catalog WITH (
     'warehouse'='hdfs://hadoop:8020/warehouse/tablespace/managed/hive'
 );
 
+CREATE CATALOG iceberg_hadoop_catalog WITH (
+    'type'='iceberg',
+    'catalog-type'='hadoop',
+    'clients'='5',
+    'property-version'='2',
+    'warehouse'='hdfs://hadoop:8020/warehouse/tablespace/managed/hive'
+);
+
 CREATE CATALOG iceberg_hive_s3_catalog WITH (
     'type'='iceberg',
     'catalog-type'='hive',
