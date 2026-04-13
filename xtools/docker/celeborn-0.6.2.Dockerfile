@@ -13,6 +13,7 @@ RUN echo "export CELEBORN_HOME=/usr/local/apache-celeborn-${CELEBORN_VERSION}-bi
     echo 'export PATH=${PATH}:${CELEBORN_HOME}/bin:${CELEBORN_HOME}/sbin' >> /etc/profile
 
 ENV CELEBORN_HOME /usr/local/apache-celeborn-${CELEBORN_VERSION}-bin
+ENV PATH ${PATH}:${CELEBORN_HOME}/bin:${CELEBORN_HOME}/sbin
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo '' >> /usr/local/bin/enterpoint.sh && \
