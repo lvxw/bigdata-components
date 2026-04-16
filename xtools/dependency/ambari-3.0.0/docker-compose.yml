@@ -1,0 +1,75 @@
+networks:
+  ambari-network:
+    name: ambari-network
+    driver: bridge
+    ipam:
+      config:
+        - gateway: 172.20.0.1
+          subnet: 172.20.0.0/16
+
+services:
+  bigtop_hostname0:
+    hostname: bigtop_hostname0
+    container_name: bigtop_hostname0
+    networks:
+      ambari-network:
+        ipv4_address: 172.20.0.2
+    command: /sbin/init
+    domainname: bigtop.apache.org
+    image: bigtop/puppet:trunk-rockylinux-8
+    mem_limit: 8g
+    mem_swappiness: 0
+    ports:
+      - "8080:8080"
+    privileged: true
+    volumes:
+      - ./ambari-repo:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+
+  bigtop_hostname1:
+    hostname: bigtop_hostname1
+    container_name: bigtop_hostname1
+    networks:
+      ambari-network:
+        ipv4_address: 172.20.0.3
+    command: /sbin/init
+    domainname: bigtop.apache.org
+    image: bigtop/puppet:trunk-rockylinux-8
+    mem_limit: 8g
+    mem_swappiness: 0
+    privileged: true
+    volumes:
+      - ./ambari-repo:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+
+  bigtop_hostname2:
+    hostname: bigtop_hostname2
+    container_name: bigtop_hostname2
+    networks:
+      ambari-network:
+        ipv4_address: 172.20.0.4
+    command: /sbin/init
+    domainname: bigtop.apache.org
+    image: bigtop/puppet:trunk-rockylinux-8
+    mem_limit: 8g
+    mem_swappiness: 0
+    privileged: true
+    volumes:
+      - ./ambari-repo:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+
+  bigtop_hostname3:
+    hostname: bigtop_hostname3
+    container_name: bigtop_hostname3
+    networks:
+      ambari-network:
+        ipv4_address: 172.20.0.5
+    command: /sbin/init
+    domainname: bigtop.apache.org
+    image: bigtop/puppet:trunk-rockylinux-8
+    mem_limit: 8g
+    mem_swappiness: 0
+    privileged: true
+    volumes:
+      - ./ambari-repo:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts

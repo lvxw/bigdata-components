@@ -1,11 +1,20 @@
-FROM 10.10.52.13:5000/lakehouse/flink:1.20.3
+FROM 10.10.52.13:5000/lakehouse/docker:28.1.1
 
 ARG FLINK_MAIN_VERSION="1.20"
 ARG FLINK_VERSION="${FLINK_MAIN_VERSION}.3"
 ARG INLONG_VERSION="2.3.0"
 
+RUN apt-get update && \
+    apt-get -y install openjdk-21-jdk&& \
+    apt-get clean
+
+RUN echo '}' >> /etc/profile && \
+    echo '{"storage-driver": "vfs"}'> /etc/docker/daemon.json && \
+    wget -O /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/v2.29.4/docker-compose-linux-x86_64 && \
+    chmod 755 /usr/local/bin/docker-compose
+
 ADD /dependency/inlong-${INLONG_VERSION}/apache-inlong-${INLONG_VERSION}-bin.tar.gz /usr/local/
-#RUN wget -P /usr/local/src/ https://archive.apache.org/dist/inlong/${INLONG_VERSION}/apache-inlong-${INLONG_VERSION}-bin.tar.gz && \
+#RUN wget -P /usr/local/src/ https://archive.apache.orgdocker:/dist/inlong/${INLONG_VERSION}/apache-inlong-${INLONG_VERSION}-bin.tar.gz && \
 #    tar zxvf /usr/local/src/apache-inlong-${INLONG_VERSION}-bin.tar.gz -C /usr/local/ && \
 #    rm -rf /usr/local/src/apache-inlong-${INLONG_VERSION}-bin.tar.gz
 

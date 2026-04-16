@@ -3,5 +3,6 @@
 **/windows-11/shared/*.exe
 **/windows-11/shared/*.msi
 **/workspaces-*/*.tar.gz
+**/inlong-*/*.tar.gz
 **/desktop-*/*.tgz
 **/windows-11/*.iso
