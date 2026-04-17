@@ -20,17 +20,20 @@ ADD /dependency/inlong-${INLONG_VERSION}/apache-inlong-${INLONG_VERSION}-bin.tar
 
 COPY /dependency/inlong-${INLONG_VERSION}/inlong.conf /usr/local/apache-inlong-${INLONG_VERSION}/conf/
 
-RUN wget -P /usr/local/apache-inlong-${INLONG_VERSION}/inlong-agent/lib/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \
+RUN dos2unix /usr/local/apache-inlong-${INLONG_VERSION}/conf/inlong.conf && \
+    mkdir -p /usr/local/apache-inlong-${INLONG_VERSION}/inlong-dataproxy/logs && \
+    wget -P /usr/local/apache-inlong-${INLONG_VERSION}/inlong-agent/lib/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \
     cp /usr/local/apache-inlong-${INLONG_VERSION}/inlong-agent/lib/mysql-connector-java-8.0.28.jar  /usr/local/apache-inlong-${INLONG_VERSION}/inlong-audit/lib/ && \
     cp /usr/local/apache-inlong-${INLONG_VERSION}/inlong-agent/lib/mysql-connector-java-8.0.28.jar  /usr/local/apache-inlong-${INLONG_VERSION}/inlong-manager/lib/ && \
     cp /usr/local/apache-inlong-${INLONG_VERSION}/inlong-agent/lib/mysql-connector-java-8.0.28.jar  /usr/local/apache-inlong-${INLONG_VERSION}/inlong-tubemq-manager/lib/
-
 
 RUN echo "export INLONG_HOME=/usr/local/apache-inlong-${INLONG_VERSION}" >> /etc/profile && \
     echo 'export PATH=${PATH}:${INLONG_HOME}/bin' >> /etc/profile
 
 ENV INLONG_HOME /usr/local/apache-inlong-${INLONG_VERSION}
 ENV PATH ${PATH}:${INLONG_HOME}/bin
+
+WORKDIR /usr/local/apache-inlong-${INLONG_VERSION}
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
