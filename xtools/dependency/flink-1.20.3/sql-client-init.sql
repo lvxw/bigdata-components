@@ -10,6 +10,24 @@ SET table.dml-sync=true;
 
 SET table.exec.sink.upsert-materialize = none;
 
+
+CREATE TABLE `mysql_cdc_test_worker` (
+    `id` INT,
+    `name` STRING,
+    `salary` DECIMAL(8, 2),
+    `desc` STRING,
+    `ts` TIMESTAMP(6),
+    PRIMARY KEY (`id`) NOT ENFORCED
+) WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = 'mysql',
+    'port' = '3306',
+    'username' = 'root',
+    'password' = 'root',
+    'database-name' = 'test',
+    'table-name' = 'worker'
+);
+
 CREATE CATALOG `hive_catalog` WITH (
     'type' = 'hive',
     'default-database' = 'default',
