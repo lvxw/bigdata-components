@@ -21,7 +21,8 @@ COPY /dependency/spark-${SPARK_VERSION}/spark-sql-iceberg.sh /usr/local/spark-${
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-iceberg-s3.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 COPY /dependency/spark-${SPARK_VERSION}/spark-sql-fluss.sh /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/
 
-RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-spark-3.5/${PAIMON_VERSION}/paimon-spark-3.5-${PAIMON_VERSION}.jar && \
+RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/spark/spark-connect_2.12/3.5.4/spark-connect_2.12-3.5.4.jar && \
+    wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-spark-3.5/${PAIMON_VERSION}/paimon-spark-3.5-${PAIMON_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/paimon/paimon-s3/${PAIMON_VERSION}/paimon-s3-${PAIMON_VERSION}.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.35.4/bundle-2.35.4.jar && \
     wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.maven.apache.org/maven2/org/apache/gravitino/gravitino-spark-common/${GRAVITINO_VERSION}/gravitino-spark-common-${GRAVITINO_VERSION}.jar && \
@@ -33,12 +34,13 @@ RUN wget -P /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/ https://repo.mav
     rm -rf /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/jars/hadoop-yarn-server-web-proxy-3.3.4.jar
 
 RUN echo "export SPARK_HOME=/usr/local/spark-${SPARK_VERSION}-bin-hadoop3" >> /etc/profile && \
-    echo 'export PATH=${PATH}:${SPARK_HOME}/bin' >> /etc/profile && \
+    echo 'export PATH=${PATH}:${SPARK_HOME}/bin:${SPARK_HOME}/sbin' >> /etc/profile && \
     cp ${HIVE_HOME}/conf/hive-site.xml /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/conf/ && \
     chmod 755 /usr/local/spark-${SPARK_VERSION}-bin-hadoop3/bin/*.sh
 
 ENV SPARK_HOME /usr/local/spark-${SPARK_VERSION}-bin-hadoop3
-ENV PATH ${PATH}:${SPARK_HOME}/bin
+ENV PATH ${PATH}:${SPARK_HOME}/bin:${SPARK_HOME}/sbin
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
+    echo 'start-connect-server.sh --master yarn --deploy-mode client --executor-memory 2g --num-executors 1' > /usr/local/bin/enterpoint.sh && \
     echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh \
