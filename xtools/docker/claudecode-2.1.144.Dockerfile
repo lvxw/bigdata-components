@@ -18,8 +18,6 @@ ENV ANTHROPIC_BASE_URL https://dashscope.aliyuncs.com/apps/anthropic
 ENV ANTHROPIC_API_KEY sk-890f55d8ca734843954290df53d4167a
 ENV ANTHROPIC_MODEL qwen3.6-plus
 
-RUN curl -fsSL https://github.com/SaladDay/cc-switch-cli/releases/latest/download/install.sh | bash
-
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo "source /etc/profile" >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
