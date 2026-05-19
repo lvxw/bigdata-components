@@ -11,7 +11,7 @@ if [[ -n "$TARGET" ]] && [[ ! "$TARGET" =~ ^(stable|latest|[0-9]+\.[0-9]+\.[0-9]
     exit 1
 fi
 
-GCS_BUCKET="https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases"
+DOWNLOAD_BASE_URL="https://downloads.claude.ai/claude-code-releases"
 DOWNLOAD_DIR="$HOME/.claude/downloads"
 
 # Check for required dependencies
@@ -35,7 +35,7 @@ fi
 download_file() {
     local url="$1"
     local output="$2"
-    
+
     if [ "$DOWNLOADER" = "curl" ]; then
         if [ -n "$output" ]; then
             curl -fsSL -o "$output" "$url"
@@ -57,16 +57,16 @@ download_file() {
 get_checksum_from_manifest() {
     local json="$1"
     local platform="$2"
-    
+
     # Normalize JSON to single line and extract checksum
     json=$(echo "$json" | tr -d '\n\r\t' | sed 's/ \+/ /g')
-    
+
     # Extract checksum for platform using bash regex
     if [[ $json =~ \"$platform\"[^}]*\"checksum\"[[:space:]]*:[[:space:]]*\"([a-f0-9]{64})\" ]]; then
         echo "${BASH_REMATCH[1]}"
         return 0
     fi
-    
+
     return 1
 }
 
@@ -105,10 +105,10 @@ fi
 mkdir -p "$DOWNLOAD_DIR"
 
 # Always download latest version (which has the most up-to-date installer)
-version=$(download_file "$GCS_BUCKET/latest")
+version=$(download_file "$DOWNLOAD_BASE_URL/latest")
 
 # Download manifest and extract checksum
-manifest_json=$(download_file "$GCS_BUCKET/$version/manifest.json")
+manifest_json=$(download_file "$DOWNLOAD_BASE_URL/$version/manifest.json")
 
 # Use jq if available, otherwise fall back to pure bash parsing
 if [ "$HAS_JQ" = true ]; then
@@ -125,7 +125,7 @@ fi
 
 # Download and verify
 binary_path="$DOWNLOAD_DIR/claude-$version-$platform"
-if ! download_file "$GCS_BUCKET/$version/$platform/claude" "$binary_path"; then
+if ! download_file "$DOWNLOAD_BASE_URL/$version/$platform/claude" "$binary_path"; then
     echo "Download failed" >&2
     rm -f "$binary_path"
     exit 1

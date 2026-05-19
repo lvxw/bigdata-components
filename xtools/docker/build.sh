@@ -19,6 +19,7 @@ PODMAN_CMD="podman build \
     ../"
 
 eval ${PODMAN_CMD} && \
-podman push 10.10.52.13:5000/lakehouse/${COMPONENT_TYPE}:${COMPONENT_VERSION}  docker-daemon:10.10.52.13:5000/lakehouse/${COMPONENT_TYPE}:${COMPONENT_VERSION} && \
+docker rmi -f  10.10.52.13:5000/lakehouse/${COMPONENT_TYPE}:${COMPONENT_VERSION} && \
+podman save 10.10.52.13:5000/lakehouse/${COMPONENT_TYPE}:${COMPONENT_VERSION} | docker load  && \
 docker image prune -f && \
 podman image prune -f

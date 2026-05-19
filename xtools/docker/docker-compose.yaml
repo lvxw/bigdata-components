@@ -711,7 +711,7 @@ services:
       datalake-network:
 
   claudecode:
-    image: 10.10.52.13:5000/lakehouse/claudecode:2.1.63
+    image: 10.10.52.13:5000/lakehouse/claudecode:2.1.144
     privileged: true
     hostname: claudecode
     container_name: claudecode
