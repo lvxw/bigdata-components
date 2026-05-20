@@ -9,10 +9,12 @@ if not exist "C:\Program Files\JetBrains\IntelliJ IDEA 2025.3.3\bin\idea64.exe" 
 
 @echo off
 set IDEA_PATH="C:\Program Files\JetBrains\IntelliJ IDEA 2025.3.3\bin\idea64.exe"
-set RAINBOW_PLUGIN_ID=izhangzhihao.rainbow.brackets
+set RAINBOW_PLUGIN_ID=izhangzhihao.rainbow.brackets.lite
 set CLASSIC_UI_PLUGIN_ID=com.intellij.classic.ui
+set PYTHON_PLUGIN_ID=PythonCore
 %IDEA_PATH% installPlugins %RAINBOW_PLUGIN_ID%
 %IDEA_PATH% installPlugins %CLASSIC_UI_PLUGIN_ID%
+%IDEA_PATH% installPlugins %PYTHON_PLUGIN_ID%
 
 if not exist "C:\Program\Common7\IDE\devenv.exe" (
     echo "installing Visual Studio"
