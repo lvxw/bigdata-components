@@ -7,6 +7,13 @@ if not exist "C:\Program Files\JetBrains\IntelliJ IDEA 2025.3.3\bin\idea64.exe" 
     echo "IDEA 2025.3.3 already exists, skip install"
 )
 
+@echo off
+set IDEA_PATH="C:\Program Files\JetBrains\IntelliJ IDEA 2025.3.3\bin\idea64.exe"
+set RAINBOW_PLUGIN_ID=izhangzhihao.rainbow.brackets
+set CLASSIC_UI_PLUGIN_ID=com.intellij.classic.ui
+%IDEA_PATH% installPlugins %RAINBOW_PLUGIN_ID%
+%IDEA_PATH% installPlugins %CLASSIC_UI_PLUGIN_ID%
+
 if not exist "C:\Program\Common7\IDE\devenv.exe" (
     echo "installing Visual Studio"
     powershell -Command "& {Invoke-WebRequest -Uri 'https://aka.ms/vs/17/release/vs_community.exe' -OutFile $env:TEMP\\vs_community.exe; Start-Process -FilePath $env:TEMP\\vs_community.exe -ArgumentList '--installPath', 'C:\\Program Files\\Microsoft Visual Studio\\2026', '--add', 'Microsoft.VisualStudio.Workload.ManagedDesktop', '--includeRecommended', '--quiet', '--wait' -Wait -PassThru}"

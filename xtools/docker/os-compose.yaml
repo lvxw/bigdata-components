@@ -46,10 +46,14 @@ services:
     networks:
       os-network:
     volumes:
-      - ../dependency/windows-11/os-store:/storage
+      - /windows/os-11:/storage
       - ../dependency/windows-11/shared:/shared
       - ../dependency/windows-11/scripts:/oem
       - ../dependency/windows-11/win11x64_zh.iso:/boot.iso
+    environment:
+      RAM_SIZE: "8G"
+      CPU_CORES: "4"
+      DISK_SIZE: "100G"
     restart: always
     stop_grace_period: 2m
 

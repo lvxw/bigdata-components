@@ -718,6 +718,9 @@ services:
     restart: always
     networks:
       datalake-network:
+    volumes:
+      - /mnt/e/my-project:/mnt/my-project
+      - /mnt/e/sync-project:/mnt/sync-project
 
   oceanbase:
     image: 10.10.52.13:5000/lakehouse/oceanbase:4.5.0.0
