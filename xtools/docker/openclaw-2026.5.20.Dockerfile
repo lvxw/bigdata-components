@@ -1,23 +1,4 @@
-FROM 10.10.52.13:5000/lakehouse/ubuntu:20.04.p
-
-RUN apt update && \
-    apt install -y software-properties-common && \
-    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
-    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
-    apt-get update && \
-    apt-get install -y git cmake && \
-    apt-get clean
-
-ARG NODEJS_VERSION="24.14.0"
-
-RUN wget -P /usr/local/src/ https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-linux-x64.tar.xz && \
-    tar -xvf /usr/local/src/node-v${NODEJS_VERSION}-linux-x64.tar.xz -C /usr/local/ && \
-    rm -rf /usr/local/src/node-v${NODEJS_VERSION}-linux-x64.tar.xz && \
-    echo "export NODEJS_HOME=/usr/local/node-v${NODEJS_VERSION}-linux-x64" >> /etc/profile && \
-    echo 'export PATH=${PATH}:${NODEJS_HOME}/bin' >> /etc/profile
-
-ENV NODEJS_HOME /usr/local/node-v${NODEJS_VERSION}-linux-x64
-ENV PATH ${PATH}:${NODEJS_HOME}/bin
+FROM 10.10.52.13:5000/lakehouse/claudecode:2.1.144
 
 RUN curl -fsSL https://openclaw.ai/install.sh | OPENCLAW_VERSION=v2026.5.20 OPENCLAW_NO_PROMPT=1 OPENCLAW_NO_ONBOARD=1  bash
 
@@ -31,8 +12,8 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo "openclaw config set gateway.auth.token 'a7f1c3e9b284d6a5e8c2b4a1f7d3e6c9b5a8d2f4e1c7b3a9d5f2e8b4c6a1d3f5'" >> /usr/local/bin/enterpoint.sh && \
     echo 'nohup openclaw gateway run >> /tmp/openclaw.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo '#要配置飞书，执行一下命令即可' >> /usr/local/bin/enterpoint.sh && \
-    echo '#openclaw channels login --channel feishu  appId: cli_aa9a9e93c7f8dbda  app_secret: PIkWXxMTCWBEkkukGTkrJe3WUi6ic3Vv' >> /usr/local/bin/enterpoint.sh && \
-    echo '#openclaw config set channels.feishu.allowFrom '"'"'["ou_d5bbcac63cf3d1fc2e66a065b1f8e8b8"]'"'"' --json' >> /usr/local/bin/enterpoint.sh && \
+    echo '#openclaw channels login --channel feishu  appId: cli_aa9afbf5efbadbdb  app_secret: o9ks2Ik46fYqrlPVWf8gUcDvolbFaRfd' >> /usr/local/bin/enterpoint.sh && \
+    echo '#openclaw config set channels.feishu.allowFrom '"'"'["ou_67c4eac9d2361b764e99040811acb149"]'"'"' --json' >> /usr/local/bin/enterpoint.sh && \
     echo '#netstat -tunlp  |  grep 18790 | awk '"'"'{print $7}'"'"' | awk -F '"'"'/'"'"' '"'"'{print $1}'"'"' |  xargs kill -9' >> /usr/local/bin/enterpoint.sh && \
     echo '#nohup openclaw gateway run >> /tmp/openclaw.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
