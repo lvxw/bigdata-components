@@ -702,13 +702,15 @@ services:
 
 
   openclaw:
-    image: 10.10.52.13:5000/lakehouse/openclaw:2026.3.1
+    image: 10.10.52.13:5000/lakehouse/openclaw:2026.5.20
     privileged: true
     hostname: openclaw
     container_name: openclaw
     restart: always
     networks:
       datalake-network:
+    ports:
+      - "18790:18790"
 
   claudecode:
     image: 10.10.52.13:5000/lakehouse/claudecode:2.1.144
