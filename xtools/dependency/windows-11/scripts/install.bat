@@ -53,9 +53,15 @@ if not exist "C:\Users\docker\AppData\Local\Programs\CC Switch\cc-switch.exe" (
 
 if not exist "C:\Users\docker\AppData\Roaming\npm\openclaw.cmd" (
     echo "download openclaw"
-    powershell -Command "iwr -useb https://openclaw.ai/install.ps1 | iex"
-    xcopy "C:\Users\docker\Desktop\Shared\install-openClaw.ps1" "C:\Users\docker\Desktop" /Y
-    xcopy "C:\Users\docker\Desktop\Shared\start-openClaw.ps1" "C:\Users\docker\Desktop" /Y
+    set OPENCLAW_VERSION=v2026.5.20 && set OPENCLAW_NO_PROMPT=1 && set OPENCLAW_NO_ONBOARD=1 && powershell -Command "iwr -useb https://openclaw.ai/install.ps1 | iex"
+    openclaw plugins install @openclaw/feishu
+    openclaw conf set auth.choice custom-api-key
+    openclaw conf set auth.custom.baseUrl "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    openclaw conf set auth.custom.modelId "qwen3.6-plus"
+    openclaw conf set auth.custom.apiKey "sk-890f55d8ca734843954290df53d4167a"
+    openclaw conf set auth.custom.compatibility openai
+
+    xcopy "C:\Users\docker\Desktop\Shared\config-openClaw.ps1" "C:\Users\docker\Desktop" /Y
     echo "download openclaw complete."
 ) else (
     echo "Visual openclaw already exists, skip install"

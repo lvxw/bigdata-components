@@ -1,1 +1,0 @@
-Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"openclaw gateway run`"" -WindowStyle Hidden
