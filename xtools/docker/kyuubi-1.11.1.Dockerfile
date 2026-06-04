@@ -7,11 +7,12 @@ ARG SPARK_VERSION="${SPARK_MAIN_VERSION}.4"
 ARG PAIMON_VERSION="1.3.1"
 ARG GRAVITINO_VERSION="1.1.0"
 ARG CELEBORN_VERSION="0.6.2"
+ARG APACHE_SOFT_DIST_BASE_URL=https://mirrors.huaweicloud.com/apache
 
-RUN wget -P /usr/local/src/ https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
+RUN wget -P /usr/local/src/ ${APACHE_SOFT_DIST_BASE_URL}/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
     tar zxvf /usr/local/src/spark-${SPARK_VERSION}-bin-hadoop3.tgz -C /usr/local/ && \
     rm -rf /usr/local/src/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
-    wget -P /usr/local/src/ https://archive.apache.org/dist/kyuubi/kyuubi-${KYUUBI_VERSION}/apache-kyuubi-${KYUUBI_VERSION}-bin.tgz && \
+    wget -P /usr/local/src/ ${APACHE_SOFT_DIST_BASE_URL}/kyuubi/kyuubi-${KYUUBI_VERSION}/apache-kyuubi-${KYUUBI_VERSION}-bin.tgz && \
     tar zxvf /usr/local/src/apache-kyuubi-${KYUUBI_VERSION}-bin.tgz -C /usr/local/ && \
     rm -rf /usr/local/src/apache-kyuubi-${KYUUBI_VERSION}-bin.tgz
 
@@ -44,7 +45,10 @@ ENV PATH ${PATH}:${SPARK_HOME}/bin
 ENV PATH ${PATH}:${KYUUBI_HOME}/bin:${SPARK_HOME}/bin
 ENV SPARK_VERSION=${SPARK_VERSION}
 
+COPY /dependency/kyuubi-${KYUUBI_VERSION}/submit-jar-application.sh ${KYUUBI_HOME}/bin/
+
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
+    chmod 755 ${KYUUBI_HOME}/bin/submit-jar-application.sh && \
     echo ' ' >> /usr/local/bin/enterpoint.sh && \
     echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet hadoop 8020 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
     echo 'do' >> /usr/local/bin/enterpoint.sh && \
@@ -96,8 +100,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'echo "#!/bin/bash" > ${KYUUBI_HOME}/bin/kyuubi-mysql.sh'  >> /usr/local/bin/enterpoint.sh && \
     echo 'echo "${KYUUBI_HOME}/bin/beeline --incremental=true -n root -p root -u '"'"'jdbc:hive2://kyuubi:10009/;#kyuubi.engine.jdbc.connection.url=jdbc:mysql://mysql:3306/test;kyuubi.engine.jdbc.connection.user=root;kyuubi.engine.jdbc.connection.password=root;kyuubi.engine.jdbc.type=mysql;kyuubi.engine.jdbc.driver.class=com.mysql.cj.jdbc.Driver;kyuubi.engine.type=jdbc'"'"'" >> ${KYUUBI_HOME}/bin/kyuubi-mysql.sh'  >> /usr/local/bin/enterpoint.sh && \
     echo 'chmod 755 ${KYUUBI_HOME}/bin/kyuubi-mysql.sh' >> /usr/local/bin/enterpoint.sh && \
-    echo 'echo curl --location --request POST '"'"'http://kyuubi:10099/api/v1/batches'"'"' --header '"'"'Content-Type: application/json'"'"' --data '"'"'{"batchType":"SPARK","name":"Spark Pi","className":"org.apache.spark.examples.SparkPi","resource":"/usr/local/spark-3.5.4-bin-hadoop3/examples/jars/spark-examples_2.12-3.5.4.jar","conf":{"spark.master":"yarn"}}'"'"' >> ${KYUUBI_HOME}/bin/submit-jar-application.sh'  >> /usr/local/bin/enterpoint.sh && \
-    echo 'chmod 755 ${KYUUBI_HOME}/bin/submit-jar-application.sh' >> /usr/local/bin/enterpoint.sh && \
     echo ' ' >> /usr/local/bin/enterpoint.sh && \
     echo 'kyuubi start' >> /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh

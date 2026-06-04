@@ -372,7 +372,7 @@ services:
       - "8182:8182"
 
   kyuubi:
-    image: 10.10.52.13:5000/lakehouse/kyuubi:1.11.0
+    image: 10.10.52.13:5000/lakehouse/kyuubi:1.11.1
     user: root
     privileged: true
     hostname: kyuubi
