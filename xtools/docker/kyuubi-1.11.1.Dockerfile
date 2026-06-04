@@ -45,10 +45,10 @@ ENV PATH ${PATH}:${SPARK_HOME}/bin
 ENV PATH ${PATH}:${KYUUBI_HOME}/bin:${SPARK_HOME}/bin
 ENV SPARK_VERSION=${SPARK_VERSION}
 
-COPY /dependency/kyuubi-${KYUUBI_VERSION}/submit-jar-application.sh ${KYUUBI_HOME}/bin/
+COPY /dependency/kyuubi-${KYUUBI_VERSION}/kyuubi-submit-pi-calculate.sh ${KYUUBI_HOME}/bin/
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
-    chmod 755 ${KYUUBI_HOME}/bin/submit-jar-application.sh && \
+    chmod 755 ${KYUUBI_HOME}/bin/kyuubi-submit-pi-calculate.sh && \
     echo ' ' >> /usr/local/bin/enterpoint.sh && \
     echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet hadoop 8020 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
     echo 'do' >> /usr/local/bin/enterpoint.sh && \
