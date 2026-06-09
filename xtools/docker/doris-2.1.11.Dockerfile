@@ -8,7 +8,10 @@ ARG DORIS_VERSION="2.1.11"
 
 RUN wget -P /usr/local/src/ https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${DORIS_VERSION}-bin-x64.tar.gz && \
     tar zxvf /usr/local/src/apache-doris-${DORIS_VERSION}-bin-x64.tar.gz -C /usr/local/ && \
-    rm -rf /usr/local/src/apache-doris-${DORIS_VERSION}-bin-x64.tar.gz
+    rm -rf /usr/local/src/apache-doris-${DORIS_VERSION}-bin-x64.tar.gz && \
+    mkdir -p /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/fe/jdbc_drivers /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/be/jdbc_drivers  && \
+    wget -P /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/fe/jdbc_drivers/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar && \
+    cp /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/fe/jdbc_drivers/mysql-connector-java-8.0.28.jar /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/be/jdbc_drivers/
 
 COPY /dependency/doris-${DORIS_VERSION}/fe.conf /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/fe/conf/
 COPY /dependency/doris-${DORIS_VERSION}/init.sql /usr/local/apache-doris-${DORIS_VERSION}-bin-x64/fe/conf/
