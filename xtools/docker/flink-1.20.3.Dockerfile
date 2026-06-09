@@ -7,7 +7,9 @@ ARG ICEBERG_VERSION="1.10.1"
 ARG FLUSS_VERSION="0.9.0-incubating"
 ARG CELEBORN_VERSION="0.6.2"
 
-RUN wget -P /usr/local/src/ https://archive.apache.org/dist/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-scala_2.12.tgz && \
+ARG APACHE_SOFT_DIST_BASE_URL=https://mirrors.huaweicloud.com/apache
+
+RUN wget -P /usr/local/src/ ${APACHE_SOFT_DIST_BASE_URL}/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-scala_2.12.tgz && \
     tar zxvf /usr/local/src/flink-${FLINK_VERSION}-bin-scala_2.12.tgz -C /usr/local/ && \
     rm -rf /usr/local/src/flink-${FLINK_VERSION}-bin-scala_2.12.tgz
 
