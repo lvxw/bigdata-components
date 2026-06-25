@@ -712,6 +712,18 @@ services:
     ports:
       - "18790:18790"
 
+  claudecode-qwen:
+    image: 10.10.52.13:5000/lakehouse/claudecode-qwen:2.1.191
+    privileged: true
+    hostname: claudecode-qwen
+    container_name: claudecode-qwen
+    restart: always
+    networks:
+      datalake-network:
+    volumes:
+      - /mnt/e/my-project:/mnt/my-project
+      - /mnt/e/sync-project:/mnt/sync-project
+
   claudecode:
     image: 10.10.52.13:5000/lakehouse/claudecode:2.1.144
     privileged: true
