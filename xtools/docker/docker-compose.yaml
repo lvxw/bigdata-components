@@ -702,7 +702,7 @@ services:
 
 
   openclaw:
-    image: 10.10.52.13:5000/lakehouse/openclaw:2026.5.20
+    image: 10.10.52.13:5000/lakehouse/openclaw:2026.6.10
     privileged: true
     hostname: openclaw
     container_name: openclaw
