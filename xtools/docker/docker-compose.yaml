@@ -725,7 +725,7 @@ services:
       - /mnt/e/sync-project:/mnt/sync-project
 
   claudecode:
-    image: 10.10.52.13:5000/lakehouse/claudecode:2.1.144
+    image: 10.10.52.13:5000/lakehouse/claudecode:2.1.191
     privileged: true
     hostname: claudecode
     container_name: claudecode
@@ -733,8 +733,8 @@ services:
     networks:
       datalake-network:
     volumes:
-      - /mnt/e/my-project:/mnt/my-project
-      - /mnt/e/sync-project:/mnt/sync-project
+      - ~/my-project:/mnt/my-project
+      - ~/sync-project:/mnt/sync-project
 
   oceanbase:
     image: 10.10.52.13:5000/lakehouse/oceanbase:4.5.0.0
