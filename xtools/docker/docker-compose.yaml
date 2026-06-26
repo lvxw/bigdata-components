@@ -712,6 +712,17 @@ services:
     ports:
       - "18790:18790"
 
+  hermes:
+    image: 10.10.52.13:5000/lakehouse/hermes:2026.6.19
+    privileged: true
+    hostname: hermes
+    container_name: hermes
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "9119:9119"
+
   claudecode-qwen:
     image: 10.10.52.13:5000/lakehouse/claudecode-qwen:2.1.191
     privileged: true
