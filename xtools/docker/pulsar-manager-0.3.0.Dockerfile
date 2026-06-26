@@ -26,6 +26,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
       -H "Content-Type: application/json" \
       -X PUT http://pulsar-manager:7750/pulsar-manager/users/superuser \
       -d '\''{"name": "admin", "password": "123456", "description": "pulsar-manager", "email": "admin@qq.com"}'\''' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]

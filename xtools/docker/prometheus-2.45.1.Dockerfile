@@ -19,7 +19,7 @@ RUN mkdir -p ${PROMETHEUS_HOME}/logs ${PUSHGATEWAY_HOME}/logs && \
     echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'source /etc/profile' >> /usr/local/bin/enterpoint.sh && \
     echo 'nohup prometheus --config.file ${PROMETHEUS_HOME}/prometheus.yml > ${PROMETHEUS_HOME}/logs/prometheus-start.log  2>&1 &' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]

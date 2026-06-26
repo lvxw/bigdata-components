@@ -19,6 +19,6 @@ COPY /dependency/jupyter-${JUPYTER_VERSION}/jupyter_notebook_config.py /root/.ju
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo "source /etc/profile" >> /usr/local/bin/enterpoint.sh && \
     echo "jupyter notebook --allow-root" >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]

@@ -20,6 +20,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'source /etc/profile' >> /usr/local/bin/enterpoint.sh && \
     echo 'bookkeeper shell metaformat -n -f' >> /usr/local/bin/enterpoint.sh && \
     echo 'bookkeeper-daemon.sh start bookie' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]

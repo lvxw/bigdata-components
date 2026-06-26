@@ -43,4 +43,4 @@ ENV PATH ${PATH}:${SPARK_HOME}/bin:${SPARK_HOME}/sbin
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'start-connect-server.sh --master yarn --deploy-mode client --executor-memory 2g --num-executors 1' > /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh \
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh \

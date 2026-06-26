@@ -16,6 +16,6 @@ ENV PATH ${PATH}:${PUSHGATEWAY_HOME}
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'source /etc/profile' >> /usr/local/bin/enterpoint.sh && \
     echo 'nohup pushgateway --web.listen-address="0.0.0.0:9091" > /usr/local/pushgateway-${PUSHGATEWAY_VERSION}.linux-amd64/logs/prometheus-start.log  2>&1 &' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]

@@ -24,6 +24,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
     echo 'done' >> /usr/local/bin/enterpoint.sh && \
     echo 'kafka-server-start.sh -daemon ${KAFKA_HOME}/config/server.properties' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]
