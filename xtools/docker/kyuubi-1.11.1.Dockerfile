@@ -123,4 +123,4 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
 #    echo ' ' >> /usr/local/bin/enterpoint.sh && \
 #    echo 'chmod 755 ${KYUUBI_HOME}/bin/kyuubi-flink.sh' >> /usr/local/bin/enterpoint.sh && \
 #    echo 'kyuubi start' >> /usr/local/bin/enterpoint.sh && \
-#    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh \
+#    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh \

@@ -18,4 +18,4 @@ ENV PATH ${PATH}:${ZEPPELIN_HOME}/bin
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'cd ${ZEPPELIN_HOME} &&  bin/zeppelin-daemon.sh start' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh

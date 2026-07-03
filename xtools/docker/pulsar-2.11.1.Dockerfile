@@ -53,6 +53,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo '  --web-service-url http://pulsar:8082 \' >> /usr/local/bin/enterpoint.sh && \
     echo '  --broker-service-url pulsar://pulsar:6650' >> /usr/local/bin/enterpoint.sh && \
     echo 'pulsar-daemon start broker' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]

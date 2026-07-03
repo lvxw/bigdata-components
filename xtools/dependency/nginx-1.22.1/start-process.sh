@@ -2,5 +2,5 @@
 
 /usr/local/nginx/sbin/nginx
 
-tail -f /root/.bashrc
+sleep infinity
 

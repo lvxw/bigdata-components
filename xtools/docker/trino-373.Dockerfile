@@ -45,7 +45,7 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo "source /etc/profile" >> /usr/local/bin/enterpoint.sh && \
     echo "cd /usr/local/trino-server-${TRINO_VERSION}" >> /usr/local/bin/enterpoint.sh && \
     echo 'bin/launcher start' >> /usr/local/bin/enterpoint.sh && \
-    echo 'tail -f /root/.bashrc' >> /usr/local/bin/enterpoint.sh
+    echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]
