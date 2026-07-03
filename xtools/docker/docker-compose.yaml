@@ -214,6 +214,20 @@ services:
     ports:
       - "9092:9092"
 
+  schema-registry:
+    image: 10.10.52.13:5000/lakehouse/schema-registry:6.2.1
+    user: root
+    privileged: true
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - kafka
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "8086:8081"
+
   clickhouse:
     image:  10.10.52.13:5000/lakehouse/clickhouse:21.3.20.1
     user: root
