@@ -1,6 +1,6 @@
 FROM 10.10.52.13:5000/lakehouse/claudecode-qwen:2.1.191
 
-ARG HERMES_VERSION="2026.6.19"
+ARG HERMES_VERSION="2026.7.1"
 
 COPY /dependency/hermes-${HERMES_VERSION}/install.sh /usr/local/src/
 

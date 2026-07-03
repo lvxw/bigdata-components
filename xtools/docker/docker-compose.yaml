@@ -713,7 +713,7 @@ services:
       - "18790:18790"
 
   hermes:
-    image: 10.10.52.13:5000/lakehouse/hermes:2026.6.19
+    image: 10.10.52.13:5000/lakehouse/hermes:2026.7.1
     privileged: true
     hostname: hermes
     container_name: hermes
