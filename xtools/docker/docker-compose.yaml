@@ -745,6 +745,8 @@ services:
     restart: always
     networks:
       datalake-network:
+    ports:
+      - "3000:3000"
     volumes:
       - /mnt/e/my-project:/mnt/my-project
       - /mnt/e/sync-project:/mnt/sync-project
