@@ -4,6 +4,10 @@ ARG CLAUDE_VERSION="2.1.191"
 ARG NODE_VERSION="v24.18.0"
 ARG CUSTOM_MODE_ID="qwen3.7-max-preview"
 
+RUN apt-get update && \
+    apt-get -y install libsecret-1-0 libsecret-1-dev && \
+    apt-get clean
+
 RUN wget -P /usr/local/src/ https://nodejs.org/dist/latest-v24.x/node-${NODE_VERSION}-linux-x64.tar.gz && \
     tar -zxvf /usr/local/src/node-${NODE_VERSION}-linux-x64.tar.gz -C /opt/ && \
     rm -rf /usr/local/src/node-${NODE_VERSION}-linux-x64.tar.gz
@@ -48,5 +52,5 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]
 
-
-# npx -y @larksuiteoapi/lark-mcp login --host 127.0.0.1 -a cli_aac710384b789cdc -s pQzsUnnXo8Aa9yRu58BuJclQvyusJOQO
+#在容器内部通过1.curl命令结果的3000 + 2.浏览访问curl的返回地址授权 + 3.curl浏览器的重定向3000
+# npx -y @larksuiteoapi/lark-mcp login  -a cli_aac710384b789cdc -s pQzsUnnXo8Aa9yRu58BuJclQvyusJOQO
