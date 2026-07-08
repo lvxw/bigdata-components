@@ -2,7 +2,7 @@ FROM 10.10.52.13:5000/lakehouse/ubuntu:20.04.p
 
 ARG CLAUDE_VERSION="2.1.191"
 ARG NODE_VERSION="v24.18.0"
-ARG CUSTOM_MODE_ID="qwen3.7-max-2026-06-08"
+ARG CUSTOM_MODE_ID="qwen3.7-max-preview"
 
 RUN wget -P /usr/local/src/ https://nodejs.org/dist/latest-v24.x/node-${NODE_VERSION}-linux-x64.tar.gz && \
     tar -zxvf /usr/local/src/node-${NODE_VERSION}-linux-x64.tar.gz -C /opt/ && \
@@ -14,6 +14,22 @@ ENV PATH="${NODEJS_HOME}/bin:/root/.local/bin:${PATH}"
 COPY /dependency/claudecode-${CLAUDE_VERSION}/install.sh /usr/local/src/
 
 RUN bash /usr/local/src/install.sh ${CLAUDE_VERSION}  && \
+    claude mcp add-json --scope=user lark-mcp '{\
+     "mcpServers": {\
+       "lark-mcp": {\
+         "command": "npx",\
+         "args": [\
+           "-y",\
+           "@larksuiteoapi/lark-mcp",\
+           "mcp",\
+           "-a",\
+           "cli_aac710384b789cdc",\
+           "-s",\
+           "pQzsUnnXo8Aa9yRu58BuJclQvyusJOQO",\
+           "--oauth"\
+         ]\
+       }\
+     }' && \
     rm -rf /usr/local/src/install.sh && \
     sed -i '$i\  ,"hasCompletedOnboarding": true' /root/.claude.json && \
     echo 'export PATH="${PATH}:/root/.local/bin"' >> /etc/profile && \
@@ -31,3 +47,6 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo 'sleep infinity' >> /usr/local/bin/enterpoint.sh
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/enterpoint.sh"]
+
+
+# npx -y @larksuiteoapi/lark-mcp login --host 127.0.0.1 -a cli_aac710384b789cdc -s pQzsUnnXo8Aa9yRu58BuJclQvyusJOQO
