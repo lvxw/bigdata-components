@@ -774,6 +774,8 @@ services:
     volumes:
       - ~/my_project:/mnt/my_project
       - ~/sync_project:/mnt/sync_project
+      - ~/sync_project/bigdata-components/xtools/dependency/claudecode-prod-2.1.191/.claude.json:/root/.claude.json
+      - ~/sync_project/bigdata-components/xtools/dependency/claudecode-prod-2.1.191/.claude:/root/.claude
 
   oceanbase:
     image: 10.10.52.13:5000/lakehouse/oceanbase:4.5.0.0
