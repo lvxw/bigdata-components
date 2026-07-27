@@ -19,20 +19,15 @@ COPY /dependency/claudecode-${CLAUDE_VERSION}/install.sh /usr/local/src/
 
 RUN bash /usr/local/src/install.sh ${CLAUDE_VERSION}  && \
     claude mcp add-json --scope=user lark-mcp '{\
-     "mcpServers": {\
-       "lark-mcp": {\
-         "command": "npx",\
-         "args": [\
-           "-y",\
-           "@larksuiteoapi/lark-mcp",\
-           "mcp",\
-           "-a",\
-           "cli_aac710384b789cdc",\
-           "-s",\
-           "pQzsUnnXo8Aa9yRu58BuJclQvyusJOQO",\
-           "--oauth"\
-         ]\
-       }\
+       "command": "npx",\
+       "args": [\
+         "-y",\
+         "@larksuiteoapi/lark-mcp",\
+         "mcp",\
+         "-a", "cli_aac710384b789cdc",\
+         "-s", "pQzsUnnXo8Aa9yRu58BuJclQvyusJOQO",\
+         "--oauth"\
+       ]\
      }' && \
     rm -rf /usr/local/src/install.sh && \
     sed -i '$i\  ,"hasCompletedOnboarding": true' /root/.claude.json && \
