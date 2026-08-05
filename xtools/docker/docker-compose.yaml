@@ -797,6 +797,18 @@ services:
       - "2983:2983"
       - "2886:2886"
 
+  risingwave:
+    image: 10.10.52.13:5000/lakehouse/risingwave:2.8.5
+    privileged: true
+    hostname: risingwave
+    container_name: risingwave
+    restart: always
+    networks:
+      datalake-network:
+    ports:
+      - "4566:4566"
+      - "5691:5691"
+
   inlong:
     image: 10.10.52.13:5000/lakehouse/inlong:2.3.0
     privileged: true
