@@ -1,6 +1,6 @@
 FROM 10.10.52.13:5000/lakehouse/ubuntu:20.04.b
 
-ARG PUSHGATEWAY_VERSION="1.11.1"
+ARG PUSHGATEWAY_VERSION="1.11.2"
 
 RUN wget -P /usr/local/src/ https://github.com/prometheus/pushgateway/releases/download/v${PUSHGATEWAY_VERSION}/pushgateway-${PUSHGATEWAY_VERSION}.linux-amd64.tar.gz && \
     tar zxvf /usr/local/src/pushgateway-${PUSHGATEWAY_VERSION}.linux-amd64.tar.gz -C /usr/local/ && \

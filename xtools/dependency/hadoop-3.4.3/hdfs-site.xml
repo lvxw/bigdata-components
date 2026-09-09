@@ -45,4 +45,31 @@
         <name>dfs.client.block.write.replace-datanode-on-failure.policy</name>
         <value>NEVER</value>
     </property>
+
+
+    <!-- HDFS NFS Gateway -->
+    <property>
+        <name>dfs.nfs3.dump.dir</name>
+        <value>/tmp/.hdfs-nfs</value>
+    </property>
+    <property>
+        <name>dfs.nfs.exports.allowed.hosts</name>
+        <value>* rw</value>
+    </property>
+    <property>
+        <name>dfs.namenode.accesstime.precision</name>
+        <value>3600000</value>
+    </property>
+    <property>
+        <name>nfs.superuser</name>
+        <value>hdfs</value>
+    </property>
+    <property>
+        <name>dfs.nfs.rtmax</name>
+        <value>1048576</value>
+    </property>
+    <property>
+        <name>dfs.nfs.wtmax</name>
+        <value>1048576</value>
+    </property>
 </configuration>
