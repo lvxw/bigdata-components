@@ -416,7 +416,7 @@ services:
       - "9090:9090"
 
   pushgateway:
-    image: 10.10.52.13:5000/lakehouse/pushgateway:1.11.1
+    image: 10.10.52.13:5000/lakehouse/pushgateway:1.11.2
     user: root
     privileged: true
     hostname: pushgateway
