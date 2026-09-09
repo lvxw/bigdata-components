@@ -10,7 +10,7 @@ RUN echo "export PUSHGATEWAY_HOME=/usr/local/pushgateway-${PUSHGATEWAY_VERSION}.
     echo 'export PATH=${PATH}:${PUSHGATEWAY_HOME}' >> /etc/profile && \
     mkdir -p /usr/local/pushgateway-${PUSHGATEWAY_VERSION}.linux-amd64/logs
 
-ENV PUSHGATEWAY_HOME /usr/local/pushgateway-${PUSHGATEWAY_HOME}.linux-amd64
+ENV PUSHGATEWAY_HOME /usr/local/pushgateway-${PUSHGATEWAY_VERSION}.linux-amd64
 ENV PATH ${PATH}:${PUSHGATEWAY_HOME}
 
 RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
