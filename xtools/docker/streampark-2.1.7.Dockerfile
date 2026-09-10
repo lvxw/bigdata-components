@@ -2,13 +2,14 @@ FROM 10.10.52.13:5000/lakehouse/flink:1.20.3
 
 ARG STREAMPARK_VERSION="2.1.7"
 
-RUN wget -P /usr/local/src/ https://archive.apache.org/dist/streampark/${STREAMPARK_VERSION}/apache-streampark_2.12-${STREAMPARK_VERSION}-bin.tar.gz && \
+RUN wget -P /usr/local/src/ https://mirrors.huaweicloud.com/apache/streampark/${STREAMPARK_VERSION}/apache-streampark_2.12-${STREAMPARK_VERSION}-bin.tar.gz && \
     tar zxvf /usr/local/src/apache-streampark_2.12-${STREAMPARK_VERSION}-bin.tar.gz -C /usr/local/ && \
     rm -rf /usr/local/src/apache-streampark_2.12-${STREAMPARK_VERSION}-bin.tar.gz
 
 RUN wget -P /usr/local/apache-streampark_2.12-${STREAMPARK_VERSION}-bin/lib/ https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar
 
 COPY /dependency/streampark-${STREAMPARK_VERSION}/config.yaml /usr/local/apache-streampark_2.12-${STREAMPARK_VERSION}-bin/conf/
+COPY /dependency/streampark-${STREAMPARK_VERSION}/mysql-data.sql /usr/local/apache-streampark_2.12-${STREAMPARK_VERSION}-bin/script/data/
 
 RUN echo "export STREAMPARK_HOME=/usr/local/apache-streampark_2.12-${STREAMPARK_VERSION}-bin" >> /etc/profile && \
     echo 'export PATH=${PATH}:${STREAMPARK_HOME}/bin' >> /etc/profile && \
