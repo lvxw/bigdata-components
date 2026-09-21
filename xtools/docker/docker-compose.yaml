@@ -833,13 +833,23 @@ services:
     ports:
       - "18080:18080"
 
-  ambari:
-    image: 10.10.52.13:5000/lakehouse/ambari:3.0.0
+  moto:
+    image: 10.10.52.13:5000/lakehouse/moto:5.2.3
     privileged: true
-    hostname: ambari
-    container_name: ambari
+    hostname: moto
+    container_name: moto
     restart: always
     networks:
       datalake-network:
     ports:
-      - "18080:8080"
+      - "5000:5000"
+
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:4.14.0
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=glue
+      - DEFAULT_REGION=us-east-1
+      - DEBUG=1
