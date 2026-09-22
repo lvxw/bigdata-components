@@ -838,6 +838,8 @@ services:
     privileged: true
     hostname: moto
     container_name: moto
+    depends_on:
+      - minio
     restart: always
     networks:
       datalake-network:
