@@ -213,6 +213,7 @@ services:
       datalake-network:
     ports:
       - "9092:9092"
+      - "9094:9094"
 
   schema-registry:
     image: 10.10.52.13:5000/lakehouse/schema-registry:6.2.1
