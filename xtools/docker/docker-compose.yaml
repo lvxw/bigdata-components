@@ -633,7 +633,7 @@ services:
       - "8090:8090"
 
   amoro:
-    image: 10.10.52.13:5000/lakehouse/amoro:0.8.1-incubating
+    image: 10.10.52.13:5000/lakehouse/amoro:0.9.0-incubating
     user: root
     privileged: true
     hostname: amoro
