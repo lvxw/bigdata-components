@@ -1,6 +1,6 @@
 # dl.min.io stopped serving community binaries (HTTP 410) after the MinIO open-source project was archived,
 # so build the pinned releases from the GitHub source tags instead.
-FROM golang:1.24 AS builder
+FROM docker.io/library/golang:1.24 AS builder
 
 ARG MINIO_TAG="RELEASE.2025-04-22T22-12-26Z"
 ARG MC_TAG="RELEASE.2025-04-16T18-13-26Z"
