@@ -1,8 +1,9 @@
 FROM 10.10.52.13:5000/lakehouse/ubuntu:24.04.j
 
+ARG APACHE_SOFT_DIST_BASE_URL=https://mirrors.huaweicloud.com/apache
 ARG HADOOP_VERSION="3.4.3"
 
-RUN wget -P /usr/local/src/ https://mirrors.huaweicloud.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz && \
+RUN wget -P /usr/local/src/ ${APACHE_SOFT_DIST_BASE_URL}/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz && \
     tar zxvf /usr/local/src/hadoop-${HADOOP_VERSION}.tar.gz -C /usr/local/ && \
     rm -rf /usr/local/src/hadoop-${HADOOP_VERSION}.tar.gz
 

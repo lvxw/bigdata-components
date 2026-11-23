@@ -31,7 +31,7 @@ RUN wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-flink-${FLINK_MAIN_VERSION}/${FLUSS_VERSION}/fluss-flink-${FLINK_MAIN_VERSION}-${FLUSS_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/celeborn/celeborn-client-flink-${FLINK_MAIN_VERSION}-shaded_2.12/${CELEBORN_VERSION}/celeborn-client-flink-${FLINK_MAIN_VERSION}-shaded_2.12-${CELEBORN_VERSION}.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/fluss/fluss-lake-paimon/${FLUSS_VERSION}/fluss-lake-paimon-${FLUSS_VERSION}.jar && \
-    wget -P /usr/local/bin/ https://dl.min.io/client/mc/release/linux-amd64/mc && \
+    wget -P /usr/local/bin/ https://dl.min.io/aistor/mc/release/linux-amd64/mc && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.35.4/bundle-2.35.4.jar && \
     wget -P /usr/local/flink-${FLINK_VERSION}/lib/ https://repo.maven.apache.org/maven2/org/apache/iceberg/iceberg-flink-runtime-1.20/${ICEBERG_VERSION}/iceberg-flink-runtime-1.20-${ICEBERG_VERSION}.jar
 

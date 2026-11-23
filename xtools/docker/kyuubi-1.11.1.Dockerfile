@@ -52,7 +52,7 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
     echo ' ' >> /usr/local/bin/enterpoint.sh && \
     echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet hadoop 8020 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
     echo 'do' >> /usr/local/bin/enterpoint.sh && \
-    echo '  nohup echo "check hadoop sleep ......" >> ${FLINK_HOME}/log/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
+    echo '  nohup echo "check hadoop sleep ......" >> ${KYUUBI_HOME}/logs/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
     echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
     echo 'done' >> /usr/local/bin/enterpoint.sh && \
     echo ' ' >> /usr/local/bin/enterpoint.sh && \
@@ -109,7 +109,7 @@ RUN echo '#!/bin/bash' > /usr/local/bin/enterpoint.sh && \
 #    echo ' ' >> /usr/local/bin/enterpoint.sh && \
 #    echo 'while [[ `echo -e '"'"'\\n'"'"' | telnet hadoop 8020 2>/dev/null | grep Connected | wc -l` -eq 0 ]]' >> /usr/local/bin/enterpoint.sh && \
 #    echo 'do' >> /usr/local/bin/enterpoint.sh && \
-#    echo '  nohup echo "check hadoop sleep ......" >> ${FLINK_HOME}/log/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
+#    echo '  nohup echo "check hadoop sleep ......" >> ${FLINK_HOME}/logs/sleep.log 2>&1 &' >> /usr/local/bin/enterpoint.sh && \
 #    echo '  sleep 1s' >> /usr/local/bin/enterpoint.sh && \
 #    echo 'done' >> /usr/local/bin/enterpoint.sh && \
 #    echo ' ' >> /usr/local/bin/enterpoint.sh && \

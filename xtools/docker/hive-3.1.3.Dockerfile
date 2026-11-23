@@ -2,8 +2,9 @@ FROM 10.10.52.13:5000/lakehouse/hadoop:3.4.3
 
 ARG HIVE_VERSION=3.1.3
 ARG PAIMON_VERSION="1.3.1"
+ARG APACHE_SOFT_DIST_BASE_URL=https://mirrors.huaweicloud.com/apache
 
-RUN wget -P /usr/local/src/ https://archive.apache.org/dist/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz && \
+RUN wget -P /usr/local/src/ ${APACHE_SOFT_DIST_BASE_URL}/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz && \
     tar zxvf /usr/local/src/apache-hive-${HIVE_VERSION}-bin.tar.gz -C /usr/local/ && \
     rm -rf /usr/local/src/apache-hive-${HIVE_VERSION}-bin.tar.gz
 

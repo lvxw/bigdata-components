@@ -1,5 +1,7 @@
 FROM 10.10.52.13:5000/lakehouse/hive:3.1.3
 
+ARG APACHE_SOFT_DIST_BASE_URL=https://mirrors.huaweicloud.com/apache
+
 ARG SPARK_MAIN_VERSION="3.5"
 ARG SPARK_VERSION="${SPARK_MAIN_VERSION}.4"
 ARG PAIMON_VERSION="1.3.1"
@@ -7,7 +9,7 @@ ARG GRAVITINO_VERSION="1.2.0"
 ARG CELEBORN_VERSION="0.6.2"
 ARG FLUSS_VERSION="0.9.0-incubating"
 
-RUN wget -P /usr/local/src/ https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
+RUN wget -P /usr/local/src/ ${APACHE_SOFT_DIST_BASE_URL}/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
     tar zxvf /usr/local/src/spark-${SPARK_VERSION}-bin-hadoop3.tgz -C /usr/local/ && \
     rm -rf /usr/local/src/spark-${SPARK_VERSION}-bin-hadoop3.tgz
 
